@@ -68,6 +68,10 @@ export default function Home() {
           <button className="button">
             add
           </button>
+          <br></br>
+          <button className="button">
+            Calculate
+          </button>
         </div>
         <div className="grid grid-cols-1 grod-rows-3">
           <div className="body_box">
@@ -79,6 +83,42 @@ export default function Home() {
             <div className="body_title">
               Variables
             </div>
+
+            <div className="container">
+            <br></br>
+            <textarea
+              className="textbox"
+              placeholder="Variable"
+            />
+            <button className="button">
+              remove
+            </button>
+          </div>
+          <div className="container">
+            <br></br>
+            <textarea
+              className="textbox"
+              placeholder="Variable"
+            />
+            <button className="button">
+              remove
+            </button>
+          </div>
+          <div className="container">
+            <br></br>
+            <textarea
+              className="textbox"
+              placeholder="Variable"
+            />
+            <button className="button">
+              remove
+            </button>
+          </div>
+
+          <button className="button">
+            add
+          </button>
+
           </div>
           <div className="body_box">
             <div className="body_title">
