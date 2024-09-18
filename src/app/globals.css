@@ -32,17 +32,6 @@ body {
   width: 100%; /* Optional: gibt dem Container eine Breite */
 }
 
-.textbox {
-  width: 100%; /* Nimmt die volle Breite des Containers ein */
-  margin: 10px; /* Optional: Abstand oberhalb der Textbox */
-  padding: 10px; /* Optional: Innenabstand für die Textbox */
-  border-radius: 20px; /* Abgerundete Ecken */
-  border: 2px solid #580000; /* Optional: Border-Farbe */
-  background-color: #ffffff; /* Hintergrundfarbe */
-  color: #0a0a0a; /* Textfarbe */
-  font-size: 16px; /* Schriftgröße */
-}
-
 .header {
   font-size: 36px;
   text-align: center;
@@ -72,20 +61,81 @@ body {
   padding: 10px;
 }
 
+.button_green {
+  border: 2px solid #4795475c;
+  background-color: #247d245c;
+  /* border-radius: 20px; */
+  border-radius: 20px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.button_red {
+  border: 2px solid #9547475c;
+  background-color: #7d24245c;
+  /* border-radius: 20px 10px; */
+  border-radius: 20px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.button_green:hover {
+  border: 2px solid #4795475c;
+  background-color: #4795475c;
+  /* border-radius: 20px; */
+  border-radius: 20px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.button_red:hover {
+  border: 2px solid #9547475c;
+  background-color: #9547475c;
+  /* border-radius: 20px 10px; */
+  border-radius: 20px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.box {
+  width: 100%;
+  padding: 10px;
+  height: 20px;
+}
+
+.main_div {
+  flex: 1;
+  border-width: 0px;
+}
+
 .body_box {
   flex: 1; /* Teilt den verfügbaren Platz auf die Textboxen auf */
-  margin: 10px 10px; /* Optional: fügt einen horizontalen Abstand hinzu */
   padding: 10px; /* Optional: fügt einen inneren Abstand hinzu */
+  width: 100%;
   /* font-size: 16px; // Optional: definiert die Schriftgröße */
   border-radius: 20px;
-  /* border: 2px solid #580000; */
+  border: 2px solid #8d8d8d;
   background-color: #474747;
+  font-size: 10;
 }
 
 .body_title {
   font-size: 20px;
+  margin: 10px;
 }
 
 .text {
   margin: 10px;
+}
+
+.output_box {
+  flex: 1; /* Teilt den verfügbaren Platz auf die Textboxen auf */
+  padding: 10px; /* Optional: fügt einen inneren Abstand hinzu */
+  width: 100%;
+  /* font-size: 16px; // Optional: definiert die Schriftgröße */
+  border-radius: 20px;
+  border: 2px solid #8d8d8d;
+  background-color: #4dc3435c;
+  font-size: 10;
+  height: fit-content 100%;
 }
