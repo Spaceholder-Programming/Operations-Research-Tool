@@ -1,7 +1,7 @@
 'use client'
 
-import { Box, Button, Output } from "./modules.tsx";
-import { test, calculate } from "./scripts.ts"
+import { Box, Button, Output, Popup_Button } from "./modules.tsx";
+import { calculate_click, import_click, export_click } from "./scripts.ts"
 
 export default function Home() {
   return (
@@ -28,10 +28,21 @@ export default function Home() {
       <Button
         title={"Calculate"}
         className={"button_green"}
-        onClickFunc={calculate} />
+        onClickFunc={calculate_click} />
+      <Popup_Button
+        title={"Import"}
+        className={"button"} />
+      <Popup_Button
+        title={"Export"}
+        className={"button"} />
+      <br></br>
       <Output
         id="out"
         text={"Ergebnis"}/>
+      <Popup_Button
+        title="Popup"
+        className="button"
+        />
 
     </>
   );
