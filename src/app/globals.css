@@ -28,8 +28,8 @@ body {
 
 .container {
   display: flex;
-  justify-content: space-between; /* Optional: sorgt für Abstand */
-  width: 100%; /* Optional: gibt dem Container eine Breite */
+  justify-content: space-between;
+  width: 100%;
 }
 
 .header {
@@ -38,10 +38,9 @@ body {
 }
 
 .header_box {
-  flex: 1; /* Teilt den verfügbaren Platz auf die Textboxen auf */
-  margin: 10px 10px; /* Optional: fügt einen horizontalen Abstand hinzu */
-  padding: 10px; /* Optional: fügt einen inneren Abstand hinzu */
-  /* font-size: 16px; // Optional: definiert die Schriftgröße */
+  flex: 1;
+  margin: 10px 10px;
+  padding: 10px;
   border-radius: 20px;
   border: 20px solid #202020;
   background-color: #202020;
@@ -72,7 +71,6 @@ body {
 .button_green {
   border: 2px solid #4795475c;
   background-color: #247d245c;
-  /* border-radius: 20px; */
   border-radius: 20px;
   margin: 10px;
   padding: 10px;
@@ -81,7 +79,6 @@ body {
 .button_red {
   border: 2px solid #9547475c;
   background-color: #7d24245c;
-  /* border-radius: 20px 10px; */
   border-radius: 20px;
   margin: 10px;
   padding: 10px;
@@ -90,7 +87,6 @@ body {
 .button_green:hover {
   border: 2px solid #4795475c;
   background-color: #4795475c;
-  /* border-radius: 20px; */
   border-radius: 20px;
   margin: 10px;
   padding: 10px;
@@ -99,7 +95,6 @@ body {
 .button_red:hover {
   border: 2px solid #9547475c;
   background-color: #9547475c;
-  /* border-radius: 20px 10px; */
   border-radius: 20px;
   margin: 10px;
   padding: 10px;
@@ -117,10 +112,9 @@ body {
 }
 
 .body_box {
-  flex: 1; /* Teilt den verfügbaren Platz auf die Textboxen auf */
-  padding: 10px; /* Optional: fügt einen inneren Abstand hinzu */
+  flex: 1;
+  padding: 10px;
   width: 100%;
-  /* font-size: 16px; // Optional: definiert die Schriftgröße */
   border-radius: 20px;
   border: 2px solid #8d8d8d;
   background-color: #474747;
@@ -137,10 +131,9 @@ body {
 }
 
 .output_box {
-  flex: 1; /* Teilt den verfügbaren Platz auf die Textboxen auf */
-  padding: 10px; /* Optional: fügt einen inneren Abstand hinzu */
+  flex: 1;
+  padding: 10px;
   width: 100%;
-  /* font-size: 16px; // Optional: definiert die Schriftgröße */
   border-radius: 20px;
   border: 2px solid #8d8d8d;
   background-color: #4dc3435c;
