@@ -62,6 +62,21 @@ export default function RootLayout({
               />
               See the source code
             </a>
+            <a
+              className="flex items-center gap-2 hover:underline hover:underline-offset-4"
+              href="https://www.gnu.org/software/glpk/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                aria-hidden
+                src="https://nextjs.org/icons/globe.svg"
+                alt="Globe icon"
+                width={16}
+                height={16}
+              />
+              Powered by GLPK
+            </a>
           </footer>
         </div>
       </body>
