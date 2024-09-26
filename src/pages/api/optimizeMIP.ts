@@ -1,6 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import GLPK from 'glpk.js';
 
+type Variable = {
+    name: string;
+    coef: number;
+};
+
+type Bound = {
+    lb: number;
+    ub: number;
+};
+
+type Constraint = {
+    name: string;
+    vars: Variable[];
+    bnds: Bound;
+};
+
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { objective, constraints, bounds } = req.body;
@@ -18,25 +35,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 objective: {
                     direction: objective.direction === 'max' ? glpk.GLP_MAX : glpk.GLP_MIN,
                     name: 'obj',
-                    vars: objective.vars.map(v => ({ name: v.name, coef: v.coef }))
+                    vars: objective.vars.map((v: Variable) => ({ name: v.name, coef: v.coef }))
                 },
-                subjectTo: constraints.map(c => ({
+                subjectTo: constraints.map((c : Constraint) => ({
                     name: c.name,
-                    vars: c.vars.map(v => ({ name: v.name, coef: v.coef })),
+                    vars: c.vars.map((v: Variable) => ({ name: v.name, coef: v.coef })),
                     bnds: {
                         type: glpk.GLP_UP,
                         lb: c.bnds.lb,
                         ub: c.bnds.ub
                     }
                 })),
-                binaries: objective.vars.map(v => v.name),
-                generals: objective.vars.map(v => v.name)
+                binaries: objective.vars.map((v: Variable) => v.name),
+                generals: objective.vars.map((v: Variable) => v.name)
             };
 
             const result = glpk.solve(problem, options);
             res.status(200).json({ result });
         } catch (error) {
-            res.status(500).json({ message: 'Error processing optimization', error: error.message });
+            res.status(500).json({ message: 'Error processing optimization', error: (error as Error).message });
         }
     } else {
         res.status(405).json({ message: 'Only POST method is allowed' });
