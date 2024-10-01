@@ -86,6 +86,7 @@ export function calculate_click() {
     GLPKAPI.glp_intopt(lp, iocp);
 
     console.log("obj: " + GLPKAPI.glp_mip_obj_val(lp));
+    document.getElementById('out').innerHTML = GLPKAPI.glp_mip_obj_val(lp);
     for(var i = 1; i <= GLPKAPI.glp_get_num_cols(lp); i++){
       console.log(GLPKAPI.glp_get_col_name(lp, i)  + " = " + GLPKAPI.glp_mip_col_val(lp, i));
     }
