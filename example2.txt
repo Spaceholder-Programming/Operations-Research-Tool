@@ -1,0 +1,11 @@
+maximize objective: x+y
+subject to
++1 x + 2 y <= 15
++3 x + 1 y <= 20
+
+bounds
+x >= 0
+y >= 0
+
+x
+y
