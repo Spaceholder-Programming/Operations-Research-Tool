@@ -136,6 +136,14 @@ function run(text: string) {
     customLog(GLPKAPI.glp_get_col_name(lp, i) + " = " + GLPKAPI.glp_mip_col_val(lp, i));
   }
   customLog("");
+
+  customLog("Dual values of constraints:");
+    for (var j = 1; j <= GLPKAPI.glp_get_num_rows(lp); j++) {
+        const dualValue = GLPKAPI.glp_get_row_dual(lp, j); // Abrufen des dualen Wertes
+        const constraintName = GLPKAPI.glp_get_row_name(lp, j);
+        customLog(constraintName + " dual = " + dualValue);
+    }
+  customLog("");
 }
 
 // Irgend ein Interface
