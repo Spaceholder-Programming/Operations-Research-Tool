@@ -4,12 +4,26 @@ import * as LPAPI from "../pages/api/optimizeLP.js"
 
 import * as GLPKAPI from "../solver/glpk.min.js"
 
-export function test() {
-  console.log("Dies ist die Testfunktion.");
+// custom log so we can append the output dynamically
+function customLog(message: string) {
+  console.log(message); // Nachricht weiterhin in der Konsole ausgeben
+
+  // Hol das Element mit der ID "out"
+  const outputElement = document.getElementById('out');
+  
+  // Wenn das Element existiert, füge die Nachricht hinzu
+  if (outputElement) {
+    outputElement.innerHTML += message + "<br>"; // Nachricht anhängen
+  }
+}
+
+function customLogClear() {  
+  document.getElementById('out').innerHTML ="";
 }
 
 export function calculate_click() {
-  console.log("Calculating...");
+  customLogClear();
+  customLog("Calculating...<br>");
 
   let functions:string|undefined = document.getElementById('funcs').value;
   let variables:string|undefined = document.getElementById('vars').value;
@@ -66,6 +80,7 @@ export function calculate_click() {
 
   let wholeText:string = functions + "\nGenerals \n"+variables + "End";
 
+  customLog("Running optimization with input: \"" + wholeText + "\"<br>");
   run(wholeText);
 
 
@@ -74,21 +89,30 @@ export function calculate_click() {
   }
 
   function run(text:string){
+    customLog("Starting problem setup...");
     var lp = GLPKAPI.glp_create_prob();
     GLPKAPI.glp_read_lp_from_string(lp, null, text);
+    customLog("Problem created.<br>");
 
+    customLog("Scaling problem...");
     GLPKAPI.glp_scale_prob(lp, GLPKAPI.GLP_SF_AUTO);
+    customLog("Scaling complete.<br>");
 
+    customLog("Starting simplex optimization...");
     var smcp = new GLPKAPI.SMCP({presolve: GLPKAPI.GLP_ON});
     GLPKAPI.glp_simplex(lp, smcp);
+    customLog("Simplex optimization complete.<br>");
 
+    customLog("Starting integer optimization...");
     var iocp = new GLPKAPI.IOCP({presolve: GLPKAPI.GLP_ON});
     GLPKAPI.glp_intopt(lp, iocp);
+    customLog("Integer optimization complete.<br>");
 
-    console.log("obj: " + GLPKAPI.glp_mip_obj_val(lp));
-    document.getElementById('out').innerHTML = GLPKAPI.glp_mip_obj_val(lp);
-    for(var i = 1; i <= GLPKAPI.glp_get_num_cols(lp); i++){
-      console.log(GLPKAPI.glp_get_col_name(lp, i)  + " = " + GLPKAPI.glp_mip_col_val(lp, i));
+    // customLog("obj: " + GLPKAPI.glp_mip_obj_val(lp));
+    customLog("<i>Final objective value: " + GLPKAPI.glp_mip_obj_val(lp) + "</i><br>");
+    customLog("Value of each variable:");
+    for(var i = 1; i <= GLPKAPI.glp_get_num_cols(lp) - 1; i++){   // "-1" to remove the "End-variable" from logs
+      customLog(GLPKAPI.glp_get_col_name(lp, i)  + " = " + GLPKAPI.glp_mip_col_val(lp, i));
     }
 }
 
