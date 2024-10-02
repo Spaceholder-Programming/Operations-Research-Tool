@@ -39,10 +39,10 @@ export default function Home() {
       <Output
         id="out"
         text={"Ergebnis"}/>
-      <Popup_Button
+      {/* <Popup_Button
         title="Popup"
         className="button"
-        />
+        /> */}
 
     </>
   );
