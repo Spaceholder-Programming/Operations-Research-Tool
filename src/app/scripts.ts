@@ -3,30 +3,53 @@ import * as LP from "../pages/parseLP.ts"
 import * as LPAPI from "../pages/api/optimizeLP.js"
 
 import * as GLPKAPI from "../solver/glpk.min.js"
+import { start } from "repl";
 
 // custom log so we can append the output dynamically
 function customLog(message: string) {
-  console.log(message); // Nachricht weiterhin in der Konsole ausgeben
+  console.log(message); // Continue to print message inside of box
 
-  // Hol das Element mit der ID "out"
+  // Get Output Box
   const outputElement = document.getElementById('out');
-  
-  // Wenn das Element existiert, füge die Nachricht hinzu
+
+  // Append message if element exists
   if (outputElement) {
-    outputElement.innerHTML += message + "<br>"; // Nachricht anhängen
+    outputElement.innerHTML += message + "<br>"; // Append message
   }
 }
 
-function customLogClear() {  
-  document.getElementById('out').innerHTML ="";
+function customLogClear() {
+  document.getElementById('out').innerHTML = "";
+}
+
+function walltimeStopAndPrint(startpoint: number) {
+  // calculating elapsed time as timestamp
+  var duration = Date.now() - startpoint;
+
+  // Calculate seconds and ms
+  const seconds = Math.floor(duration / 1000);
+  const milliseconds = (duration % 1000) / 1000;
+
+  // formatting
+  const durationFormatted = seconds + (milliseconds >= 0 ? "." : ".") + Math.abs(milliseconds).toFixed(3).slice(2);
+
+  // Printing elapsed time
+  customLog("Elapsed time: " + durationFormatted + " seconds<br>");
+
+  // return durationFormatted;
+}
+
+function walltimeStart() {
+  return Date.now();
 }
 
 export function calculate_click() {
   customLogClear();
+  const timer = walltimeStart();
   customLog("Calculating...<br>");
 
-  let functions:string|undefined = document.getElementById('funcs').value;
-  let variables:string|undefined = document.getElementById('vars').value;
+  let functions: string | undefined = document.getElementById('funcs').value;
+  let variables: string | undefined = document.getElementById('vars').value;
 
   if (functions == undefined || variables == undefined) return;
   // let funcs:string[] = functions.split(/;/);
@@ -53,7 +76,7 @@ export function calculate_click() {
   //     namesVars.push(regexMatch[1]);
 
 
-    
+
   //   console.log(regexMatch);
   // }
 
@@ -78,52 +101,51 @@ export function calculate_click() {
 
   //   console.log(parseFunction(decider));
 
-  let wholeText:string = functions + "\nGenerals \n"+variables + "End";
+  let wholeText: string = functions + "\nGenerals \n" + variables + "End";
 
   customLog("Running optimization with input: \"" + wholeText + "\"<br>");
   run(wholeText);
 
-
-
-
-  }
-
-  function run(text:string){
-    customLog("Starting problem setup...");
-    var lp = GLPKAPI.glp_create_prob();
-    GLPKAPI.glp_read_lp_from_string(lp, null, text);
-    customLog("Problem created.<br>");
-
-    customLog("Scaling problem...");
-    GLPKAPI.glp_scale_prob(lp, GLPKAPI.GLP_SF_AUTO);
-    customLog("Scaling complete.<br>");
-
-    customLog("Starting simplex optimization...");
-    var smcp = new GLPKAPI.SMCP({presolve: GLPKAPI.GLP_ON});
-    GLPKAPI.glp_simplex(lp, smcp);
-    customLog("Simplex optimization complete.<br>");
-
-    customLog("Starting integer optimization...");
-    var iocp = new GLPKAPI.IOCP({presolve: GLPKAPI.GLP_ON});
-    GLPKAPI.glp_intopt(lp, iocp);
-    customLog("Integer optimization complete.<br>");
-
-    // customLog("obj: " + GLPKAPI.glp_mip_obj_val(lp));
-    customLog("<i>Final objective value: " + GLPKAPI.glp_mip_obj_val(lp) + "</i><br>");
-    customLog("Value of each variable:");
-    for(var i = 1; i <= GLPKAPI.glp_get_num_cols(lp) - 1; i++){   // "-1" to remove the "End-variable" from logs
-      customLog(GLPKAPI.glp_get_col_name(lp, i)  + " = " + GLPKAPI.glp_mip_col_val(lp, i));
-    }
+  walltimeStopAndPrint(timer);
 }
 
-  // Irgend ein Interface
-  // document.getElementById('out').innerHTML = funcs;
+function run(text: string) {
+  customLog("Starting problem setup...");
+  var lp = GLPKAPI.glp_create_prob();
+  GLPKAPI.glp_read_lp_from_string(lp, null, text);
+  customLog("Problem created.<br>");
 
-  // output.innerHTML = functions.innerHTML;
+  customLog("Scaling problem...");
+  GLPKAPI.glp_scale_prob(lp, GLPKAPI.GLP_SF_AUTO);
+  customLog("Scaling complete.<br>");
 
-  // createProblemMIP();
+  customLog("Starting simplex optimization...");
+  var smcp = new GLPKAPI.SMCP({ presolve: GLPKAPI.GLP_ON });
+  GLPKAPI.glp_simplex(lp, smcp);
+  customLog("Simplex optimization complete.<br>");
 
-  // LPAPI.default();
+  customLog("Starting integer optimization...");
+  var iocp = new GLPKAPI.IOCP({ presolve: GLPKAPI.GLP_ON });
+  GLPKAPI.glp_intopt(lp, iocp);
+  customLog("Integer optimization complete.<br>");
+
+  // customLog("obj: " + GLPKAPI.glp_mip_obj_val(lp));
+  customLog("<i>Final objective value: " + GLPKAPI.glp_mip_obj_val(lp) + "</i><br>");
+  customLog("Value of each variable:");
+  for (var i = 1; i <= GLPKAPI.glp_get_num_cols(lp) - 1; i++) {   // "-1" to remove the "End-variable" from logs
+    customLog(GLPKAPI.glp_get_col_name(lp, i) + " = " + GLPKAPI.glp_mip_col_val(lp, i));
+  }
+  customLog("");
+}
+
+// Irgend ein Interface
+// document.getElementById('out').innerHTML = funcs;
+
+// output.innerHTML = functions.innerHTML;
+
+// createProblemMIP();
+
+// LPAPI.default();
 
 
 export function import_click() {
