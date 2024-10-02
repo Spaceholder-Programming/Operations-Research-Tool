@@ -29,9 +29,9 @@ export default function Home() {
         title={"Calculate"}
         className={"button_green"}
         onClickFunc={calculate_click} />
-      <Popup_Button
+      {/* <Popup_Button
         title={"Import"}
-        className={"button"} />
+        className={"button"} /> */}
       <Popup_Button
         title={"Export"}
         className={"button"} />
