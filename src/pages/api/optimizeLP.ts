@@ -44,9 +44,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 ${problem.subjectTo.map((c: any) => `${c.vars.map((v: any) => `${v.coef} ${v.name}`).join(' + ')} ${c.bnds.ub ? `<= ${c.bnds.ub}` : ''}`).join('\n')}\n`;
 
             res.status(200).json({ result, lpFormat });
-        } catch (error) {
-            console.error('Error processing optimization:', error);
-            res.status(500).json({ message: 'Error processing optimization', error: error.message });
+        } catch (error: unknown) {
+            // Type Assertion to access properties of the error object
+            if (error instanceof Error) {
+                console.error('Error processing optimization:', error);
+                res.status(500).json({ message: 'Error processing optimization', error: error.message });
+            } else {
+                console.error('Unknown error:', error);
+                res.status(500).json({ message: 'Error processing optimization', error: 'Unknown error' });
+            }
         }
     } else {
         res.status(405).json({ message: 'Only POST method is allowed' });

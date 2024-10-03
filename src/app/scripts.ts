@@ -199,7 +199,7 @@ function run(text: string) {
   customLog("");
 }
 
-function downloadLPFormatting(objective: string, subject: any, bounds: any) {
+function downloadLPFormatting(objective: any, subject: any, bounds: any) {
   customLog("Preparing file content string...<br>");
   
   // ensure that all vars are strings
