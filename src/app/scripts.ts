@@ -1,6 +1,6 @@
-import * as MIP from "../pages/parseMIP"
-import * as LP from "../pages/parseLP"
-import * as LPAPI from "../pages/api/optimizeLP.js"
+import * as MIP from "../parser/parseMIP"
+import * as LP from "../parser/parseLP"
+import * as LPAPI from "../api/optimizeLP.js"
 
 import * as GLPKAPI from "../solver/glpk.min.js"
 import { start } from "repl";
@@ -27,7 +27,7 @@ function customLogClear() {
 
 function walltimeStopAndPrint(startpoint: number) {
   // calculating elapsed time as timestamp
-  var duration = Date.now() - startpoint;
+  let duration = Date.now() - startpoint;
 
   // Calculate seconds and ms
   const seconds = Math.floor(duration / 1000);
@@ -164,7 +164,7 @@ export function calculate_click() {
 
 function run(text: string) {
   customLog("Starting problem setup...");
-  var lp = GLPKAPI.glp_create_prob();
+  let lp = GLPKAPI.glp_create_prob();
   GLPKAPI.glp_read_lp_from_string(lp, null, text);
   customLog("Problem created.<br>");
 
@@ -173,25 +173,25 @@ function run(text: string) {
   customLog("Scaling complete.<br>");
 
   customLog("Starting simplex optimization...");
-  var smcp = new GLPKAPI.SMCP({ presolve: GLPKAPI.GLP_ON });
+  let smcp = new GLPKAPI.SMCP({ presolve: GLPKAPI.GLP_ON });
   GLPKAPI.glp_simplex(lp, smcp);
   customLog("Simplex optimization complete.<br>");
 
   customLog("Starting integer optimization...");
-  var iocp = new GLPKAPI.IOCP({ presolve: GLPKAPI.GLP_ON });
+  let iocp = new GLPKAPI.IOCP({ presolve: GLPKAPI.GLP_ON });
   GLPKAPI.glp_intopt(lp, iocp);
   customLog("Integer optimization complete.<br>");
 
   // customLog("obj: " + GLPKAPI.glp_mip_obj_val(lp));
   customLog("<i>Final objective value: " + GLPKAPI.glp_mip_obj_val(lp) + "</i><br>");
   customLog("Value of each variable:");
-  for (var i = 1; i <= GLPKAPI.glp_get_num_cols(lp) - 1; i++) {   // "-1" to remove the "End-variable" from logs
+  for (let i = 1; i <= GLPKAPI.glp_get_num_cols(lp) - 1; i++) {   // "-1" to remove the "End-variable" from logs
     customLog(GLPKAPI.glp_get_col_name(lp, i) + " = " + GLPKAPI.glp_mip_col_val(lp, i));
   }
   customLog("");
 
   customLog("Dual values of constraints:");
-    for (var j = 1; j <= GLPKAPI.glp_get_num_rows(lp); j++) {
+    for (let j = 1; j <= GLPKAPI.glp_get_num_rows(lp); j++) {
         const dualValue = GLPKAPI.glp_get_row_dual(lp, j); // fetch dual
         const constraintName = GLPKAPI.glp_get_row_name(lp, j);
         customLog(constraintName + " dual = " + dualValue);
