@@ -1,7 +1,7 @@
 'use client'
 
-import { Box, Button, Output, Popup_Button } from "./modules.tsx";
-import { calculate_click, import_click, export_click } from "./scripts.ts"
+import { Box, Button, Output } from "./modules";
+import { calculate_click, downloadLP, import_click } from "./scripts"
 
 export default function Home() {
   return (
@@ -18,9 +18,17 @@ export default function Home() {
         </div>
       </header>
       <Box
-        title={"Functions"}
-        placeholder={"Your Functions here"}
-        id="funcs"/>
+        title={"Objective"}
+        placeholder={"Objective"}
+        id="objective"/>
+      <Box
+        title={"Subject"}
+        placeholder={"Subject"}
+        id="subject"/>
+      <Box
+        title={"Bounds"}
+        placeholder={"Bounds"}
+        id="bounds"/>
       <Box
         title={"Variables"}
         placeholder={"Your Variables here"}
@@ -32,9 +40,10 @@ export default function Home() {
       {/* <Popup_Button
         title={"Import"}
         className={"button"} /> */}
-      <Popup_Button
-        title={"Export"}
-        className={"button"} />
+      <Button
+        title={"Export as LP"}
+        className={"button"}
+        onClickFunc={downloadLP} />
       <br></br>
       <Output
         id="out"

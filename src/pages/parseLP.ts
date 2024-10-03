@@ -34,3 +34,7 @@ function createProblemLP(
 
   return problem;
 }
+
+export function parseLP(input: string) {
+  console.log("Parsing LP file:", input);
+}

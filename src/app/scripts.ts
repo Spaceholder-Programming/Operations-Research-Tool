@@ -1,5 +1,5 @@
-import * as MIP from "../pages/parseMIP.ts"
-import * as LP from "../pages/parseLP.ts"
+import * as MIP from "../pages/parseMIP"
+import * as LP from "../pages/parseLP"
 import * as LPAPI from "../pages/api/optimizeLP.js"
 
 import * as GLPKAPI from "../solver/glpk.min.js"
@@ -19,7 +19,10 @@ function customLog(message: string) {
 }
 
 function customLogClear() {
-  document.getElementById('out').innerHTML = "";
+  const outElement = document.getElementById('out');
+  if (outElement) {
+    outElement.innerHTML = "";
+  }
 }
 
 function walltimeStopAndPrint(startpoint: number) {
@@ -43,15 +46,55 @@ function walltimeStart() {
   return Date.now();
 }
 
+function isInputFilled(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined) {
+  if (obj == "" || obj == null || obj == undefined) {
+    customLog("Error: Empty input field.");
+    return false;
+  }
+  if (subj == "" || subj == null || subj == undefined) {
+    customLog("Error: Empty input field.");
+    return false;
+  }
+  if (bounds == "" || bounds == null || bounds == undefined) {
+    customLog("Error: Empty input field.");
+    return false;
+  }
+  if (vars == "" || vars == null || vars == undefined) {
+    customLog("Error: Empty input field.");
+    return false;
+  }
+  return true;
+}
+
 export function calculate_click() {
   customLogClear();
   const timer = walltimeStart();
   customLog("Calculating...<br>");
 
-  let functions: string | undefined = document.getElementById('funcs').value;
-  let variables: string | undefined = document.getElementById('vars').value;
+  let objective: string | undefined;
+  const objectiveElement = document.getElementById('objective');
+  if (objectiveElement !== null) {
+    objective = (objectiveElement as HTMLInputElement).value;
+  }
 
-  if (functions == undefined || variables == undefined) return;
+  let subject: string | undefined;
+  const subjectElement = document.getElementById('subject');
+  if (subjectElement !== null) {
+    subject = (subjectElement as HTMLInputElement).value;
+  }
+
+  let bounds: string | undefined;
+  const boundsElement = document.getElementById('bounds');
+  if (boundsElement !== null) {
+    bounds = (boundsElement as HTMLInputElement).value;
+  }
+
+  let variables: string | undefined;
+  const varsElement = document.getElementById('vars');
+  if (varsElement !== null) {
+    variables = (varsElement as HTMLInputElement).value;
+  }
+
   // let funcs:string[] = functions.split(/;/);
   // let vars:string[] = variables.split(/;/);
 
@@ -101,7 +144,17 @@ export function calculate_click() {
 
   //   console.log(parseFunction(decider));
 
-  let wholeText: string = functions + "\nGenerals \n" + variables + "End";
+  
+  // catch error: empty input field(s)
+  if (!isInputFilled(objective, subject, bounds, variables)) return;
+
+  let wholeText: string = "Maximize\n obj: " + objective
+                        + "\nSubject To \n" + subject 
+                        + "\nBounds \n" + bounds
+                        + "\nGenerals \n" + variables
+                        + "\nEnd";
+
+  // customLog("<br><br>DEBUGGING<br><br>\nfunctions:<br>" + functions + "<br><br>variables:<br>" + variables + "<br><br>DEBUGGING END<br>");
 
   customLog("Running optimization with input: \"" + wholeText + "\"<br>");
   run(wholeText);
@@ -139,11 +192,87 @@ function run(text: string) {
 
   customLog("Dual values of constraints:");
     for (var j = 1; j <= GLPKAPI.glp_get_num_rows(lp); j++) {
-        const dualValue = GLPKAPI.glp_get_row_dual(lp, j); // Abrufen des dualen Wertes
+        const dualValue = GLPKAPI.glp_get_row_dual(lp, j); // fetch dual
         const constraintName = GLPKAPI.glp_get_row_name(lp, j);
         customLog(constraintName + " dual = " + dualValue);
     }
   customLog("");
+}
+
+function downloadLPFormatting(objective: string, subject: any, bounds: any) {
+  customLog("Preparing file content string...<br>");
+  
+  // ensure that all vars are strings
+  const formattedObjective = typeof objective === 'string' ? objective : '';
+  const formattedSubject = typeof subject === 'string' ? subject : '';
+  const formattedBounds = typeof bounds === 'string' ? bounds : '';
+
+  // Header mit Problemname
+  const header = "\\ Your problem\n";
+
+  //  format objective
+  const objectiveFunction = `Maximize\n obj: ${formattedObjective}\n`;
+
+  // turn each subject into a single line
+  const constraints = `Subject To\n${formattedSubject.split("\n").filter(line => line.trim() !== "").map(line => ` ${line}`).join("\n")}\n`;
+
+  // format bounds
+  const boundsFormatted = `Bounds\n${formattedBounds.split("\n").filter(line => line.trim() !== "").map(line => ` ${line}`).join("\n")}\n`;
+
+  // summarizing everything into one var
+  const lpFormat = `${header}${objectiveFunction}${constraints}${boundsFormatted}End\n`;
+
+  return lpFormat;
+}
+
+
+
+
+function downloadProblemDownload(content: string) {
+  customLog("Preparing file...<br>")
+  const blob = new Blob([content], { type: 'text/plain' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'problem.txt'; // file name
+  link.click(); // starting download
+  customLog("Starting download.")
+}
+
+export function downloadLP() {
+  customLogClear();
+  customLog("Preparing download...<br>");
+  customLog("Fetching input...<br>")
+
+  let objective: string | undefined;
+  const objectiveElement = document.getElementById('objective');
+  if (objectiveElement !== null) {
+    objective = (objectiveElement as HTMLInputElement).value;
+  }
+
+  let subject: string | undefined;
+  const subjectElement = document.getElementById('subject');
+  if (subjectElement !== null) {
+    subject = (subjectElement as HTMLInputElement).value;
+  }
+
+  let bounds: string | undefined;
+  const boundsElement = document.getElementById('bounds');
+  if (boundsElement !== null) {
+    bounds = (boundsElement as HTMLInputElement).value;
+  }
+
+  let variables: string | undefined;
+  const varsElement = document.getElementById('vars');
+  if (varsElement !== null) {
+    variables = (varsElement as HTMLInputElement).value;
+  }
+
+  // catch error: empty input field(s)
+  if (!isInputFilled(objective, subject, bounds, variables)) return;
+
+  const exportString: string = downloadLPFormatting(objective, subject, bounds);
+
+  downloadProblemDownload(exportString);
 }
 
 // Irgend ein Interface
@@ -161,10 +290,10 @@ export function import_click() {
 }
 
 
-export function export_click() {
-  console.log("Exporting...");
+// export function export_click() {
+//   console.log("Exporting...");
 
-}
+// }
 
 // function parseFunction(toParse: string) {
 //   var regex = toParse.match(/([a-zA-Z][a-zA-Z0-9]*):/);

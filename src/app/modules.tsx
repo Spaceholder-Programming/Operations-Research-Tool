@@ -1,4 +1,5 @@
 import { MouseEventHandler } from "react";
+import React from 'react';
 import Popup from "reactjs-popup";
 
 export function Box({title, placeholder, id}:
@@ -35,53 +36,13 @@ export function Button({title, className, onClickFunc}:
   );
 }
 
-export function Popup_Button({title, className}:
-  {title:string; className:string|undefined;}) {
-
-  return(
-    <Popup
-      trigger={<button
-        className={className}>
-          {title}
-      </button>}
-      position="right center"
-      modal
-      nested>
-        {close => (
-          <div className="popup_bg">
-          <button  onClick={close}>
-            &times;
-          </button>
-          <div className="header"> {title} </div>
-          <div className="content">
-            This is a popup example.
-          </div>
-          <div className="actions">
-            <button className="button" onClick={close}>
-              Cancel</button>
-          </div>
-        </div>
-        )}
-      </Popup>
-    
-  
-  );
-}
-
-export function Output({id, text}:
-  {id:string; text:string}) {
-    
-  return(
+export function Output({ id, text }: { id: string; text: string }) {
+  return (
     <div className="main_div">
-      <div className="body_title"
-      >
-        Output
-      </div>
+      <div className="body_title">Output</div>
       <div className="text">
-        <p
-          className="output_box"
-          id={id}
-          value={text}>
+        <p className="output_box" id={id}>
+          {text}
         </p>
       </div>
     </div>
