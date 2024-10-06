@@ -883,3 +883,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+## adding local stuff
+# idea
+/.idea
+
+# Writerside
+/Writerside
