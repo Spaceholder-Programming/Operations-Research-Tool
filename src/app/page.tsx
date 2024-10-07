@@ -19,19 +19,19 @@ export default function Home() {
       </header>
       <Box
         title={"Objective"}
-        placeholder={"Insert your objective here. One objective is allowed. Use one line for it (no \"enter\"!) Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\nx + y\n-786433 x1 + 655361 x2"}
+        placeholder={"Insert your objective here. One objective is allowed. Use one line for it (no \"return\"!) Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\nx + y\n-786433 x1 + 655361 x2"}
         id="objective"/>
       <Box
         title={"Subject"}
-        placeholder={"Insert your subject here. One per line (divide by 'enter' button). Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\n+1 x + 2 y <= 15\n524321 x14 + 524305 x15 <= 4194303.5"}
+        placeholder={"Insert your subject here. One per line (divide by 'return' button). Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\n+1 x + 2 y <= 15\n524321 x14 + 524305 x15 <= 4194303.5"}
         id="subject"/>
       <Box
         title={"Bounds"}
-        placeholder={"Insert your bounds here. One per line (divide by 'enter' button). Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\nx >= 0\nx > 0\n0 <= x1 <= 1"}
+        placeholder={"Insert your bounds here. One per line (divide by 'return' button). Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\nx >= 0\nx > 0\n0 <= x1 <= 1"}
         id="bounds"/>
       <Box
         title={"Variables"}
-        placeholder={"List all your variables. One per line (divide by 'enter' button). Allowed symbols are a-z, A-Z.\nExample:\nx\ny"}
+        placeholder={"List all your variables. One per line (divide by 'return' button). Allowed symbols are a-z, A-Z.\nExample:\nx\ny"}
         id="vars" />
       <Button
         title={"Calculate"}
