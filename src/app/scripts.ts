@@ -46,6 +46,52 @@ function walltimeStart() {
   return Date.now();
 }
 
+function isInputValidRegex(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined): boolean {
+  customLog("Staring input checks...");
+  
+  // standard case: input is undefined - invalid
+  if (obj === undefined || obj === null || subj === undefined || subj === null || bounds === undefined || bounds === null || vars === undefined || vars === null) { 
+    customLog("Error: Function isInputValidRegex received undefined or null input.");
+    return false;
+  }
+
+  // RegEx check for objective
+  let regex = /^[ (\n)]*[\+-]? *((\d+(.\d+)? )?[a-zA-Z][a-zA-Z0-9]*)( *[\+-] *((\d+(.\d+)? )?[a-zA-Z][a-zA-Z0-9]*))*[ (\n)]*$/g;
+  let isValid = regex.test(obj);
+  if (!isValid) {
+    customLog("Error: Invalid or missing character in object box.");
+      return false;
+  }
+
+  // RegEx check for subject
+  regex = /^([ (\n)]*[\+-]* *(\d+(.\d+)? )?[a-zA-Z][a-zA-Z0-9]*( *[\+-] *(\d+(.\d+)? )?[a-zA-Z][a-zA-Z0-9]*)* *((<=?)|(>=?)|=) *[\+-]? *\d+(.\d+)?[ (\n)]*)+$/g;
+  isValid = regex.test(subj);
+  if (!isValid) {
+    customLog("Error: Invalid or missing character in subject box.");
+      return false;
+  }
+
+// RegEx check for subject
+regex = /[ (\n)]*(([a-zA-Z][a-zA-Z0-9]* *((<=?)|(>=?)|=) *\d(.\d+)?)|((\d(.\d+)?) *<=? *[a-zA-Z][a-zA-Z0-9]* *<= *(\d(.\d+)?)))[ (\n)]*/g;
+isValid = regex.test(bounds);
+if (!isValid) {
+  customLog("Error: Invalid or missing character in bounds box.");
+    return false;
+}
+
+  // RegEx check for variables
+  regex = /^ *([a-zA-Z][a-zA-Z0-9]*(\n)* *)+$/g;
+  isValid = regex.test(vars);
+  if (!isValid) {
+    customLog("Error: Invalid or missing  character in variables box.");
+    return false;
+  }
+
+  customLog("All input checks successful.");
+  customLog("");
+  return true;
+}
+
 function isInputFilled(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined) {
   if (obj == "" || obj == null || obj == undefined) {
     customLog("Error: Empty input field.");
@@ -147,6 +193,9 @@ export function calculate_click() {
   
   // catch error: empty input field(s)
   if (!isInputFilled(objective, subject, bounds, variables)) return;
+
+  // catch error: variables field has invalid characters
+  if (!isInputValidRegex(objective, subject, bounds, variables)) return;
 
   let wholeText: string = "Maximize\n obj: " + objective
                         + "\nSubject To \n" + subject 
