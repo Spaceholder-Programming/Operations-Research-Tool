@@ -48,6 +48,7 @@ ToDo
 5. Create a pull request
 # Licence
 For further information, please check out the [LICENSE](https://github.com/Spaceholder-Programming/Operations-Research-Tool/blob/main/LICENCE.txt).
+=======
 # Contact
 If you have the desire to contact the team behind this project, use the contact details on our GitHub accounts:
 + [bRNS98](https://github.com/bRNS98)
