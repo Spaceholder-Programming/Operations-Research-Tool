@@ -15,8 +15,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "OR-Took by Spaceholder Programming",
-  description: "OR-Took by Spaceholder Programming",
+  title: "OR-Tool by Spaceholder Programming",
+  description: "OR-Tool by Spaceholder Programming",
 };
 
 export default function RootLayout({
