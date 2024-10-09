@@ -117,6 +117,14 @@ export function calculate_click() {
   const timer = walltimeStart();
   customLog("Calculating...<br>");
 
+  let direction: string;
+  const directionElement = document.getElementById('direction');
+  if (directionElement !== null) {
+    direction = (directionElement as HTMLInputElement).value;
+  } else {
+    direction = "Min";
+  }
+
   let objective: string | undefined;
   const objectiveElement = document.getElementById('objective');
   if (objectiveElement !== null) {
@@ -140,7 +148,7 @@ export function calculate_click() {
   if (varsElement !== null) {
     variables = (varsElement as HTMLInputElement).value;
   }
-
+  
   // let funcs:string[] = functions.split(/;/);
   // let vars:string[] = variables.split(/;/);
 
@@ -190,14 +198,21 @@ export function calculate_click() {
 
   //   console.log(parseFunction(decider));
 
-  
+
   // catch error: empty input field(s)
   if (!isInputFilled(objective, subject, bounds, variables)) return;
 
   // catch error: variables field has invalid characters
   if (!isInputValidRegex(objective, subject, bounds, variables)) return;
 
-  let wholeText: string = "Maximize\n obj: " + objective
+  let wholeText: string = "";
+
+  if (direction == "Min") {
+    wholeText = wholeText + "Minimize\n obj: ";
+  } else {
+    wholeText = wholeText + "Maximize\n obj: ";
+  }
+  wholeText = wholeText + objective
                         + "\nSubject To \n" + subject 
                         + "\nBounds \n" + bounds
                         + "\nGenerals \n" + variables
@@ -206,15 +221,21 @@ export function calculate_click() {
   // customLog("<br><br>DEBUGGING<br><br>\nfunctions:<br>" + functions + "<br><br>variables:<br>" + variables + "<br><br>DEBUGGING END<br>");
 
   customLog("Running optimization with input: \"" + wholeText + "\"<br>");
-  run(wholeText);
+  run(wholeText, direction);
 
   walltimeStopAndPrint(timer);
 }
 
-function run(text: string) {
+function run(text: string, direction: string) {
   customLog("Starting problem setup...");
   let lp = GLPKAPI.glp_create_prob();
   GLPKAPI.glp_read_lp_from_string(lp, null, text);
+  customLog("++++++ Direction: " + direction);
+  if(direction == "Min") {
+    GLPKAPI.glp_set_obj_dir(lp, GLPKAPI.GLP_MAX);
+  } else if(direction == "Min"){
+    GLPKAPI.glp_set_obj_dir(lp, GLPKAPI.GLP_MIN);
+  }
   customLog("Problem created.<br>");
 
   customLog("Scaling problem...");
@@ -234,7 +255,7 @@ function run(text: string) {
   // customLog("obj: " + GLPKAPI.glp_mip_obj_val(lp));
   customLog("<i>Final objective value: " + GLPKAPI.glp_mip_obj_val(lp) + "</i><br>");
   customLog("Value of each variable:");
-  for (let i = 1; i <= GLPKAPI.glp_get_num_cols(lp) - 1; i++) {   // "-1" to remove the "End-variable" from logs
+    for (let i = 1; i <= GLPKAPI.glp_get_num_cols(lp); i++) {  
     customLog(GLPKAPI.glp_get_col_name(lp, i) + " = " + GLPKAPI.glp_mip_col_val(lp, i));
   }
   customLog("");
