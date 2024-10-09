@@ -47,8 +47,8 @@ ToDo
 4. Push your branch: `git push origin featurename`
 5. Create a pull request
 # Licence
-For further information, please check out the [LICENSE](https://github.com/Spaceholder-Programming/Operations-Research-Tool/blob/main/LICENCE.txt).
-=======
+
+For further information, please check out the [LICENSE](https://github.com/Spaceholder-Programming/Operations-Research-Tool/blob/main/LICENCE.md).
 # Contact
 If you have the desire to contact the team behind this project, use the contact details on our GitHub accounts:
 + [bRNS98](https://github.com/bRNS98)
