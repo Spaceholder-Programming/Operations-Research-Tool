@@ -5,12 +5,21 @@ import * as LPAPI from "../api/optimizeLP.js"
 import * as GLPKAPI from "../solver/glpk.min.js"
 import { start } from "repl";
 
+import text from "./lang"
+
 // custom log so we can append the output dynamically
-function customLog(message: string) {
-  console.log(message); // Continue to print message inside of box
+function customLog(input: string) {
+  
+
+  // get language
+  const lang = (document.getElementById('language_current') as HTMLSelectElement)?.value;
 
   // Get Output Box
   const outputElement = document.getElementById('out');
+
+  // load text
+  const message: string = text(lang, input);
+  console.log(message); // Continue to print message inside of box
 
   // Append message if element exists
   if (outputElement) {

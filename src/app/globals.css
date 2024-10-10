@@ -158,3 +158,17 @@ body {
 .popup-overlay {
   background: rgba(0, 0, 0, 0.5);
 }
+
+.dropdown-custom {
+  width: 20%;
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dropdown-custom:hover {
+  background-color: #444;
+}

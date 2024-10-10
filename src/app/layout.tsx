@@ -45,7 +45,7 @@ export default function RootLayout({
                 width={16}
                 height={16}
               />
-              Go to our docs
+              Docs
             </a>
             <a
               className="flex items-center gap-2 hover:underline hover:underline-offset-4"
@@ -60,7 +60,7 @@ export default function RootLayout({
                 width={16}
                 height={16}
               />
-              See the source code
+              Source Code
             </a>
             <a
               className="flex items-center gap-2 hover:underline hover:underline-offset-4"
@@ -75,7 +75,7 @@ export default function RootLayout({
                 width={16}
                 height={16}
               />
-              Powered by GLPK
+              GLPK
             </a>
           </footer>
         </div>
