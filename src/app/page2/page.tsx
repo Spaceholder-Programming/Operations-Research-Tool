@@ -1,11 +1,19 @@
 'use client'
 
 import { useState } from 'react';
+import * as GLPKAPI from "../../solver/glpk.min.js"
 
 export default function GMPLFileEditor() {
-  const [fileContent, setFileContent] = useState<string>('');
+  const [fileContent, setFileContent] = useState<string>(''); // State für den Dateiinhalt
   const [parameters, setParameters] = useState<{ [key: string]: any }>({});
   const [equations, setEquations] = useState<string[]>([]); // Gleichungen
+
+  const addMessage = (message: string) => {
+    const msgZone = document.getElementById("msgZone");
+    if (msgZone) {
+      msgZone.innerHTML += `<div>${message}</div>`;
+    }
+  };
 
   // Funktion zum Verarbeiten des Datei-Uploads
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,12 +24,14 @@ export default function GMPLFileEditor() {
     reader.onload = (e) => {
       const content = e.target?.result as string;
       setFileContent(content);
+      addMessage("Datei wurde erfolgreich hochgeladen und gelesen.");
 
       // Parsen des Inhalts, um Parameter und Gleichungen zu extrahieren
       const parsedParams = parseGMPL(content);
       const parsedEquations = extractEquations(content); // Gleichungen extrahieren
       setParameters(parsedParams);
       setEquations(parsedEquations); // Setze die extrahierten Gleichungen
+      addMessage("Datei wurde erfolgreich geparst.");
     };
     reader.readAsText(file);
   };
@@ -51,26 +61,76 @@ export default function GMPLFileEditor() {
     return params;
   };
 
-// Funktion zum Extrahieren von Gleichungen
-const extractEquations = (content: string): string[] => {
-  const equationRegex = /s\.t\.\s*([^;]+);/gs; // Alle s.t. Bedingungen finden
-  const equations: string[] = [];
-  let match;
-  while ((match = equationRegex.exec(content)) !== null) {
-    equations.push(match[0]); // Die ganze Gleichung hinzufügen
-  }
-  return equations;
-};
-
-  // Funktion zum Bearbeiten eines Parameters
-  const handleParameterChange = (param: string, newValue: string) => {
-    setParameters((prev) => ({
-      ...prev,
-      [param]: newValue,
-    }));
+  // Funktion zum Extrahieren von Gleichungen
+  const extractEquations = (content: string): string[] => {
+    const equationRegex = /s\.t\.\s*([^;]+);/gs; // Alle s.t. Bedingungen finden
+    const equations: string[] = [];
+    let match;
+    while ((match = equationRegex.exec(content)) !== null) {
+      equations.push(match[0]); // Die ganze Gleichung hinzufügen
+    }
+    return equations;
   };
 
+  const solve = () => {
+    addMessage("Starte das Lösen des Modells...");
 
+    var model = fileContent;
+    var lp = GLPKAPI.glp_create_prob();
+    var tran = GLPKAPI.glp_mpl_alloc_wksp();
+    GLPKAPI._glp_mpl_init_rand(tran, 1);
+
+    try {
+      GLPKAPI.glp_mpl_read_model_from_string(tran, "model", model, 0);
+      GLPKAPI.glp_mpl_generate(tran, null, function (data) {});
+      addMessage("Modell erfolgreich in das Solver-Format umgewandelt.");
+
+      GLPKAPI.glp_mpl_build_prob(tran, lp);
+      var smcp = new GLPKAPI.SMCP({ presolve: GLPKAPI.GLP_ON });
+      GLPKAPI.glp_simplex(lp, smcp);
+
+      var iocp = new GLPKAPI.IOCP({ presolve: GLPKAPI.GLP_ON });
+      GLPKAPI.glp_intopt(lp, iocp);
+      GLPKAPI.glp_mpl_postsolve(tran, lp, GLPKAPI.GLP_MIP);
+
+      addMessage("Lösen des Modells abgeschlossen.");
+
+      var status;
+      switch (GLPKAPI.glp_mip_status(lp)) {
+        case GLPKAPI.GLP_OPT:
+          status = "OPTIMAL";
+          break;
+        case GLPKAPI.GLP_UNDEF:
+          status = "UNDEFINED SOLUTION";
+          break;
+        case GLPKAPI.GLP_INFEAS:
+          status = "INFEASIBLE SOLUTION";
+          break;
+        case GLPKAPI.GLP_NOFEAS:
+          status = "NO FEASIBLE SOLUTION";
+          break;
+        case GLPKAPI.GLP_FEAS:
+          status = "FEASIBLE SOLUTION";
+          break;
+        case GLPKAPI.GLP_UNBND:
+          status = "UNBOUNDED SOLUTION";
+          break;
+      }
+
+      addMessage(`Lösungsstatus: ${status}`);
+
+      var variables = "";
+      for (var i = 1; i <= GLPKAPI.glp_get_num_cols(lp); i++) {
+        variables += GLPKAPI.glp_get_col_name(lp, i) + " = " + GLPKAPI.glp_mip_col_val(lp, i) + "<br/>";
+      }
+      addMessage("Ergebnisse der Variablen:");
+      addMessage(variables);
+
+    } catch (err) {
+      addMessage("<div class='alert alert-danger'>" + err.toString() + "</div>");
+      console.log(err);
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -96,7 +156,7 @@ const extractEquations = (content: string): string[] => {
           ))}
 
           <div style={styles.buttonContainer}>
-            <button style={styles.button}>
+            <button style={styles.button} onClick={solve}>
               Calculate
             </button>
           </div>
@@ -112,6 +172,15 @@ const extractEquations = (content: string): string[] => {
           ))}
         </div>
       )}
+
+      {fileContent && (
+        <div style={styles.fileContentBox}>
+          <h2 style={styles.subHeader}>Dateiinhalt</h2>
+          <pre style={styles.pre}>{fileContent}</pre>
+        </div>
+      )}
+
+      <div id="msgZone" style={styles.msgZone}></div>
     </div>
   );
 }
@@ -188,11 +257,27 @@ const styles = {
     fontFamily: "'Courier New', Courier, monospace",
     whiteSpace: 'pre-line' as 'pre-line',
   },
+  fileContentBox: {
+    backgroundColor: '#3c3c3c',
+    color: '#ffffff',
+    padding: '15px',
+    marginBottom: '20px',
+    borderRadius: '5px',
+    fontFamily: "'Courier New', Courier, monospace",
+    whiteSpace: 'pre-line' as 'pre-line',
+  },
   pre: {
     margin: '0',
   },
   subHeader: {
     color: '#ffffff',
     marginBottom: '10px',
+  },
+  msgZone: {
+    marginTop: '20px',
+    color: '#ffcc00',
+    backgroundColor: '#333',
+    padding: '10px',
+    borderRadius: '5px',
   },
 };
