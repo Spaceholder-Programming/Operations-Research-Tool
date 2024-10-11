@@ -128,7 +128,7 @@ function isInputFilled(obj: string | undefined, subj: string | undefined, bounds
   return true;
 }
 
-function calculate_click(maximize: boolean) {
+export function calculate_click() {
   customLogClear();
   const timer = walltimeStart();
   customLog("calculating");
@@ -215,8 +215,9 @@ function calculate_click(maximize: boolean) {
   if (!isInputValidRegex(objective, subject, bounds, variables)) return;
 
   // fetch operator
+  const maxmin = (document.getElementById('maxminswitch') as HTMLSelectElement)?.value;
   let operator = "Minimize";
-  if (maximize) operator = "Maximize";
+  if (maxmin == "maximize") operator = "Maximize";
 
   let wholeText: string = operator + "\n obj: " + objective
     + "\nSubject To \n" + subject
@@ -284,11 +285,17 @@ function downloadLPFormatting(objective: any, subject: any, bounds: any) {
   const formattedSubject = typeof subject === 'string' ? subject : '';
   const formattedBounds = typeof bounds === 'string' ? bounds : '';
 
+  // fetch operator
+  const maxmin = (document.getElementById('maxminswitch') as HTMLSelectElement)?.value;
+  let operator = "Minimize";
+  if (maxmin == "maximize") operator = "Maximize";
+
   // Header mit Problemname
   const header = "\\ Your problem\n";
 
   //  format objective
-  const objectiveFunction = `Maximize\n obj: ${formattedObjective}\n`;
+
+  const objectiveFunction = operator + `\n obj: ${formattedObjective}\n`;
 
   // turn each subject into a single line
   const constraints = `Subject To\n${formattedSubject.split("\n").filter(line => line.trim() !== "").map(line => ` ${line}`).join("\n")}\n`;
@@ -301,15 +308,6 @@ function downloadLPFormatting(objective: any, subject: any, bounds: any) {
 
   return lpFormat;
 }
-
-export function calculate_clickMaximize() {
-  calculate_click(true);
-}
-
-export function calculate_clickMinimize() {
-  calculate_click(false);
-}
-
 
 function downloadProblemDownload(content: string) {
   customLog("downloadPrepFile");
