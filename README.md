@@ -70,4 +70,4 @@ If you have the desire to contact the team behind this project, use the contact 
 + [SinusFox](https://github.com/SinusFox)
 + [widepoeppihappy](https://github.com/widepoeppihappy)
 # Issues
-If you find bug, please contact us by [creating an issue](https://github.com/Spaceholder-Programming/Operations-Research-Tool/issues/new).
+If you encounter a bug, please contact us by [creating an issue](https://github.com/Spaceholder-Programming/Operations-Research-Tool/issues/new).
