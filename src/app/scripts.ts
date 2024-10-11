@@ -62,7 +62,7 @@ function walltimeStart() {
   return Date.now();
 }
 
-function isInputValidRegex(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined): boolean {
+export function isInputValidRegex(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined): boolean {
   customLog("input_checks_start");
 
   // standard case: input is undefined - invalid
@@ -108,7 +108,7 @@ function isInputValidRegex(obj: string | undefined, subj: string | undefined, bo
   return true;
 }
 
-function isInputFilled(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined) {
+export function isInputFilled(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined): boolean {
   if (obj == "" || obj == null || obj == undefined) {
     customLog("err_emptyBox");
     return false;
@@ -158,56 +158,6 @@ export function calculate_click() {
     variables = (varsElement as HTMLInputElement).value;
   }
 
-  // let funcs:string[] = functions.split(/;/);
-  // let vars:string[] = variables.split(/;/);
-
-  // let direction = null;
-
-  // let namesVars:string[] = [];
-
-  // let variablesMIP:VariableMIP[];
-  // let variablesLP:VariableLP[];
-
-  // // console.log(vars);
-
-  // for (const decider of vars) {
-
-  //   // match comments
-  //   let regexMatch:RegExpMatchArray|null = decider.match(/#.*/);
-  //   if (regexMatch != null)
-  //     continue;
-
-  //   regexMatch = decider.match(/var/);
-  //   if (regexMatch != null)
-  //     namesVars.push(regexMatch[1]);
-
-
-
-  //   console.log(regexMatch);
-  // }
-
-
-  // for (const decider of funcs) {
-  //   let dir = decider.match(/(min|max) .*/);
-  //   if (direction != null && dir != null) {
-  //     document.getElementById('out').innerHTML = "ERROR: Multiple Functions!";
-  //     return;
-  //   }
-  //   if (direction == null && dir != null) {
-  //     direction = dir[1];
-  //     let test = parseFunction(decider);
-  //     console.log(test?.name);
-  //     variablesLP.
-  //     continue;
-  //   }
-
-  //   console.log(direction);
-
-  //   document.getElementById('out').innerHTML = direction;
-
-  //   console.log(parseFunction(decider));
-
-
   // catch error: empty input field(s)
   if (!isInputFilled(objective, subject, bounds, variables)) return;
 
@@ -224,8 +174,6 @@ export function calculate_click() {
     + "\nBounds \n" + bounds
     + "\nGenerals \n" + variables
     + "\nEnd";
-
-  // customLog("<br><br>DEBUGGING<br><br>\nfunctions:<br>" + functions + "<br><br>variables:<br>" + variables + "<br><br>DEBUGGING END<br>");
 
   customLog(getTranslation("run_optimization") + ": \"" + wholeText + "\"");
   customLog("");
@@ -276,7 +224,7 @@ function run(text: string) {
   customLog("");
 }
 
-function downloadLPFormatting(objective: any, subject: any, bounds: any) {
+export function downloadLPFormatting(objective: any, subject: any, bounds: any) {
   customLog(getTranslation("downloadPrepFileString"));
   customLog("");
 
@@ -294,7 +242,6 @@ function downloadLPFormatting(objective: any, subject: any, bounds: any) {
   const header = "\\ Your problem\n";
 
   //  format objective
-
   const objectiveFunction = operator + `\n obj: ${formattedObjective}\n`;
 
   // turn each subject into a single line
@@ -358,41 +305,3 @@ export function downloadLP() {
 
   downloadProblemDownload(exportString);
 }
-
-// Irgend ein Interface
-// document.getElementById('out').innerHTML = funcs;
-
-// output.innerHTML = functions.innerHTML;
-
-// createProblemMIP();
-
-// LPAPI.default();
-
-
-export function import_click() {
-  console.log("importing");
-}
-
-
-// export function export_click() {
-//   console.log("Exporting...");
-
-// }
-
-// function parseFunction(toParse: string) {
-//   var regex = toParse.match(/([a-zA-Z][a-zA-Z0-9]*):/);
-//   if (regex == null)
-//     return;
-//   var name = regex[1];
-
-//   regex = toParse.match(/(?:([0-9]*) *\* *([a-zA-Z][a-zA-Z0-9]*))/g);
-
-//   let coefs:number[] = [];
-//   let vars:string[] = [];
-
-//   for (const rg of regex) {
-//     coefs.push(+rg.match(/([0-9]+)/g));
-//     vars.push(rg.match(/([a-zA-Z][a-zA-Z0-9]*)/g)[0]);
-//   }
-//   return {name, coefs, vars};
-// }

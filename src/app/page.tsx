@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react';
 import { Box, Button, Output } from "./modules";
-import { calculate_click, downloadLP, import_click } from "./scripts";
+import { calculate_click, downloadLP } from "./scripts";
 import text from "./lang";
 
 export default function Home() {
   const [language, setLanguage] = useState('eng');
-  const [maxminOption, setMaxminOption] = useState('maximize'); // Zustand für den MaxMin-Switch
+  const [maxminOption, setMaxminOption] = useState('maximize');
 
   const tr_hTitle = text(language, 'header_title');
   const tr_hSubtitle = text(language, 'header_subtitle');
@@ -30,7 +30,7 @@ export default function Home() {
   };
 
   const handleMaxMinChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setMaxminOption(event.target.value); // Update den Zustand basierend auf dem Wert des Selects
+    setMaxminOption(event.target.value);
   };
     
   return (
