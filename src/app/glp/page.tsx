@@ -216,7 +216,7 @@ const GlpPage = () => {
 
         } catch (err) {
             setIsLoading(false);
-            //addMessage("<div class='alert alert-danger'>" + err.toString() + "</div>");
+            addMessage("<div class='alert alert-danger'>" + (err as Error).toString() + "</div>");
             console.log(err);
         }
     };
