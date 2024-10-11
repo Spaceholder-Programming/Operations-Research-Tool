@@ -128,7 +128,7 @@ function isInputFilled(obj: string | undefined, subj: string | undefined, bounds
   return true;
 }
 
-export function calculate_click() {
+function calculate_click(maximize: boolean) {
   customLogClear();
   const timer = walltimeStart();
   customLog("calculating");
@@ -214,7 +214,11 @@ export function calculate_click() {
   // catch error: variables field has invalid characters
   if (!isInputValidRegex(objective, subject, bounds, variables)) return;
 
-  let wholeText: string = "Maximize\n obj: " + objective
+  // fetch operator
+  let operator = "Minimize";
+  if (maximize) operator = "Maximize";
+
+  let wholeText: string = operator + "\n obj: " + objective
     + "\nSubject To \n" + subject
     + "\nBounds \n" + bounds
     + "\nGenerals \n" + variables
@@ -298,7 +302,13 @@ function downloadLPFormatting(objective: any, subject: any, bounds: any) {
   return lpFormat;
 }
 
+export function calculate_clickMaximize() {
+  calculate_click(true);
+}
 
+export function calculate_clickMinimize() {
+  calculate_click(false);
+}
 
 
 function downloadProblemDownload(content: string) {

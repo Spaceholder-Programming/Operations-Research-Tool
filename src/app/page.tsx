@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Box, Button, Output } from "./modules";
-import { calculate_click, downloadLP, import_click } from "./scripts"
+import { calculate_clickMaximize, calculate_clickMinimize, downloadLP, import_click } from "./scripts"
 import text from "./lang"
 
 export default function Home() {
@@ -19,7 +19,8 @@ export default function Home() {
   const tr_boxVarsDesc = text(language, "boxVarsDesc");
   const tr_boxOut = text(language, "boxOut");
   const tr_boxExportLP = text(language, "boxExportLP");
-  const tr_calc = text(language, "buttonCalc");
+  const tr_calc_max = text(language, "maximize");
+  const tr_calc_min = text(language, "minimize");
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(event.target.value);
@@ -59,9 +60,13 @@ export default function Home() {
         placeholder={tr_boxVarsDesc}
         id="vars" />
       <Button
-        title={tr_calc}
+        title={tr_calc_max}
         className={"button_green"}
-        onClickFunc={calculate_click} />
+        onClickFunc={calculate_clickMaximize} />
+      <Button
+        title={tr_calc_min}
+        className={"button_green"}
+        onClickFunc={calculate_clickMinimize} />
       <Button
         title={tr_boxExportLP}
         className={"button"}
