@@ -98,6 +98,8 @@ export default function text(lang: string, input: string): string {
                     return "Überprüfe auf leere Eingabefelder...";
                 case "importing":
                     return "Importiere...";
+                case "err_invalidConstraintFormat":
+                    return "Fehler: Nicht erlaubter Operator verwendet.";
             default:
                 return input;
         }
@@ -203,6 +205,8 @@ export default function text(lang: string, input: string): string {
                 return "Checking for empty input boxes...";
             case "importing":
                 return "Importing...";
+            case "err_invalidConstraintFormat":
+                return "Error: Invalid constraint format.";
             default:
                 return input;
         }

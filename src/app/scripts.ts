@@ -585,7 +585,7 @@ function parseLPConstraint(constraint: string): { vars: Variable[], bound: Bound
   const operators = ["<=", ">=", "="];
   let operator = operators.find(op => constraint.includes(op));
   if (!operator) {
-    throw new Error("Invalid constraint format");
+    throw new Error(getTranslation("err_invalidConstraintFormat"));
   }
 
   const [expr, boundStr] = constraint.split(operator);
