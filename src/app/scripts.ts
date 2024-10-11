@@ -109,7 +109,7 @@ export function isInputValidRegex(obj: string | undefined, subj: string | undefi
   return true;
 }
 
-export function isInputFilled(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined) {
+export function isInputFilled(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined): boolean {
   // if empty input: fetching inputs
   if (obj == "" || subj == "" || bounds == "" || vars == "") {
     const objectiveElement = document.getElementById('objective');
@@ -280,7 +280,6 @@ export function downloadLPFormatting(objective: any, subject: any, bounds: any) 
 
   return lpFormat;
 }
-
 
 function downloadProblemDownload(content: string) {
   customLog("downloadPrepFile");
