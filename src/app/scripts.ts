@@ -9,8 +9,6 @@ import text from "./lang"
 
 // custom log so we can append the output dynamically
 function customLog(input: string) {
-  
-
   // get language
   const lang = (document.getElementById('language_current') as HTMLSelectElement)?.value;
 
@@ -34,6 +32,14 @@ function customLogClear() {
   }
 }
 
+function getTranslation(input: string) {
+  // get language
+  const lang = (document.getElementById('language_current') as HTMLSelectElement)?.value;
+
+  // return translation
+  return text(lang, input);
+}
+
 function walltimeStopAndPrint(startpoint: number) {
   // calculating elapsed time as timestamp
   let duration = Date.now() - startpoint;
@@ -46,7 +52,8 @@ function walltimeStopAndPrint(startpoint: number) {
   const durationFormatted = seconds + (milliseconds >= 0 ? "." : ".") + Math.abs(milliseconds).toFixed(3).slice(2);
 
   // Printing elapsed time
-  customLog("Elapsed time: " + durationFormatted + " seconds<br>");
+  customLog(getTranslation("etime") + ": " + durationFormatted + " " + getTranslation("seconds"));
+  customLog("");
 
   // return durationFormatted;
 }
@@ -56,11 +63,11 @@ function walltimeStart() {
 }
 
 function isInputValidRegex(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined): boolean {
-  customLog("Starting input checks...");
-  
+  customLog("input_checks_start");
+
   // standard case: input is undefined - invalid
-  if (obj === undefined || obj === null || subj === undefined || subj === null || bounds === undefined || bounds === null || vars === undefined || vars === null) { 
-    customLog("Error: Function isInputValidRegex received undefined or null input.");
+  if (obj === undefined || obj === null || subj === undefined || subj === null || bounds === undefined || bounds === null || vars === undefined || vars === null) {
+    customLog(getTranslation("err_nullInput") + "function isInputValidRegex.");
     return false;
   }
 
@@ -68,54 +75,54 @@ function isInputValidRegex(obj: string | undefined, subj: string | undefined, bo
   let regex = /^[ (\n)]*[\+-]? *((\d+(.\d+)? )?[a-zA-Z][a-zA-Z0-9]*)( *[\+-] *((\d+(.\d+)? )?[a-zA-Z][a-zA-Z0-9]*))*[ (\n)]*$/g;
   let isValid = regex.test(obj);
   if (!isValid) {
-    customLog("Error: Invalid or missing character in object box.");
-      return false;
+    customLog(getTranslation("err_invalidInput") + " " + getTranslation("obj_box") + ".");
+    return false;
   }
 
   // RegEx check for subject
   regex = /^([ (\n)]*[\+-]* *(\d+(.\d+)? )?[a-zA-Z][a-zA-Z0-9]*( *[\+-] *(\d+(.\d+)? )?[a-zA-Z][a-zA-Z0-9]*)* *((<=?)|(>=?)|=) *[\+-]? *\d+(.\d+)?[ (\n)]*)+$/g;
   isValid = regex.test(subj);
   if (!isValid) {
-    customLog("Error: Invalid or missing character in subject box.");
-      return false;
+    customLog(getTranslation("err_invalidInput") + " " + getTranslation("subj_box") + ".");
+    return false;
   }
 
-// RegEx check for subject
-regex = /[ (\n)]*(([a-zA-Z][a-zA-Z0-9]* *((<=?)|(>=?)|=) *\d(.\d+)?)|((\d(.\d+)?) *<=? *[a-zA-Z][a-zA-Z0-9]* *<= *(\d(.\d+)?)))[ (\n)]*/g;
-isValid = regex.test(bounds);
-if (!isValid) {
-  customLog("Error: Invalid or missing character in bounds box.");
+  // RegEx check for subject
+  regex = /[ (\n)]*(([a-zA-Z][a-zA-Z0-9]* *((<=?)|(>=?)|=) *\d(.\d+)?)|((\d(.\d+)?) *<=? *[a-zA-Z][a-zA-Z0-9]* *<= *(\d(.\d+)?)))[ (\n)]*/g;
+  isValid = regex.test(bounds);
+  if (!isValid) {
+    customLog(getTranslation("err_invalidInput") + " " + getTranslation("bounds_box") + ".");
     return false;
-}
+  }
 
   // RegEx check for variables
   regex = /^ *([a-zA-Z][a-zA-Z0-9]*(\n)* *)+$/g;
   isValid = regex.test(vars);
   if (!isValid) {
-    customLog("Error: Invalid or missing  character in variables box.");
+    customLog(getTranslation("err_invalidInput") + " " + getTranslation("vars_box") + ".");
     return false;
   }
 
-  customLog("All input checks successful.");
+  customLog("input_checks_successful");
   customLog("");
   return true;
 }
 
 function isInputFilled(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined) {
   if (obj == "" || obj == null || obj == undefined) {
-    customLog("Error: Empty input field.");
+    customLog("err_emptyBox");
     return false;
   }
   if (subj == "" || subj == null || subj == undefined) {
-    customLog("Error: Empty input field.");
+    customLog("err_emptyBox");
     return false;
   }
   if (bounds == "" || bounds == null || bounds == undefined) {
-    customLog("Error: Empty input field.");
+    customLog("err_emptyBox");
     return false;
   }
   if (vars == "" || vars == null || vars == undefined) {
-    customLog("Error: Empty input field.");
+    customLog("err_emptyBox");
     return false;
   }
   return true;
@@ -124,7 +131,8 @@ function isInputFilled(obj: string | undefined, subj: string | undefined, bounds
 export function calculate_click() {
   customLogClear();
   const timer = walltimeStart();
-  customLog("Calculating...<br>");
+  customLog("calculating");
+  customLog("");
 
   let objective: string | undefined;
   const objectiveElement = document.getElementById('objective');
@@ -199,7 +207,7 @@ export function calculate_click() {
 
   //   console.log(parseFunction(decider));
 
-  
+
   // catch error: empty input field(s)
   if (!isInputFilled(objective, subject, bounds, variables)) return;
 
@@ -207,59 +215,66 @@ export function calculate_click() {
   if (!isInputValidRegex(objective, subject, bounds, variables)) return;
 
   let wholeText: string = "Maximize\n obj: " + objective
-                        + "\nSubject To \n" + subject 
-                        + "\nBounds \n" + bounds
-                        + "\nGenerals \n" + variables
-                        + "\nEnd";
+    + "\nSubject To \n" + subject
+    + "\nBounds \n" + bounds
+    + "\nGenerals \n" + variables
+    + "\nEnd";
 
   // customLog("<br><br>DEBUGGING<br><br>\nfunctions:<br>" + functions + "<br><br>variables:<br>" + variables + "<br><br>DEBUGGING END<br>");
 
-  customLog("Running optimization with input: \"" + wholeText + "\"<br>");
+  customLog(getTranslation("run_optimization") + ": \"" + wholeText + "\"");
+  customLog("");
   run(wholeText);
 
   walltimeStopAndPrint(timer);
 }
 
 function run(text: string) {
-  customLog("Starting problem setup...");
+  customLog("startProblemSetup");
   let lp = GLPKAPI.glp_create_prob();
   GLPKAPI.glp_read_lp_from_string(lp, null, text);
-  customLog("Problem created.<br>");
+  customLog("succProblemSetup");
+  customLog("");
 
-  customLog("Scaling problem...");
+  customLog("startScaling");
   GLPKAPI.glp_scale_prob(lp, GLPKAPI.GLP_SF_AUTO);
-  customLog("Scaling complete.<br>");
+  customLog("succScaling");
+  customLog("");
 
-  customLog("Starting simplex optimization...");
+  customLog("startOptimizationSimplex");
   let smcp = new GLPKAPI.SMCP({ presolve: GLPKAPI.GLP_ON });
   GLPKAPI.glp_simplex(lp, smcp);
-  customLog("Simplex optimization complete.<br>");
+  customLog("succOptimizationSimplex");
+  customLog("");
 
-  customLog("Starting integer optimization...");
+  customLog("startOptimizationInteger");
   let iocp = new GLPKAPI.IOCP({ presolve: GLPKAPI.GLP_ON });
   GLPKAPI.glp_intopt(lp, iocp);
-  customLog("Integer optimization complete.<br>");
+  customLog("succOptimizationInteger");
+  customLog("");
 
   // customLog("obj: " + GLPKAPI.glp_mip_obj_val(lp));
-  customLog("<i>Final objective value: " + GLPKAPI.glp_mip_obj_val(lp) + "</i><br>");
-  customLog("Value of each variable:");
-  for (let i = 1; i <= GLPKAPI.glp_get_num_cols(lp) - 1; i++) {   // "-1" to remove the "End-variable" from logs
+  customLog("<i>" + getTranslation("finalObjValue") + ": " + GLPKAPI.glp_mip_obj_val(lp) + "</i>");
+  customLog("");
+  customLog(getTranslation("varsValues") + ":");
+  for (let i = 1; i <= GLPKAPI.glp_get_num_cols(lp); i++) {
     customLog(GLPKAPI.glp_get_col_name(lp, i) + " = " + GLPKAPI.glp_mip_col_val(lp, i));
   }
   customLog("");
 
-  customLog("Dual values of constraints:");
-    for (let j = 1; j <= GLPKAPI.glp_get_num_rows(lp); j++) {
-        const dualValue = GLPKAPI.glp_get_row_dual(lp, j); // fetch dual
-        const constraintName = GLPKAPI.glp_get_row_name(lp, j);
-        customLog(constraintName + " dual = " + dualValue);
-    }
+  customLog(getTranslation("dualValues") + ":");
+  for (let j = 1; j <= GLPKAPI.glp_get_num_rows(lp); j++) {
+    const dualValue = GLPKAPI.glp_get_row_dual(lp, j); // fetch dual
+    const constraintName = GLPKAPI.glp_get_row_name(lp, j);
+    customLog(constraintName + " dual = " + dualValue);
+  }
   customLog("");
 }
 
 function downloadLPFormatting(objective: any, subject: any, bounds: any) {
-  customLog("Preparing file content string...<br>");
-  
+  customLog(getTranslation("downloadPrepFileString"));
+  customLog("");
+
   // ensure that all vars are strings
   const formattedObjective = typeof objective === 'string' ? objective : '';
   const formattedSubject = typeof subject === 'string' ? subject : '';
@@ -287,19 +302,22 @@ function downloadLPFormatting(objective: any, subject: any, bounds: any) {
 
 
 function downloadProblemDownload(content: string) {
-  customLog("Preparing file...<br>")
+  customLog("downloadPrepFile");
+  customLog("");
   const blob = new Blob([content], { type: 'text/plain' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
   link.download = 'problem.txt'; // file name
   link.click(); // starting download
-  customLog("Starting download.")
+  customLog("downloadStart");
 }
 
 export function downloadLP() {
   customLogClear();
-  customLog("Preparing download...<br>");
-  customLog("Fetching input...<br>")
+  customLog("downloadPrep");
+  customLog("");
+  customLog("downloadFetchInput");
+  customLog("");
 
   let objective: string | undefined;
   const objectiveElement = document.getElementById('objective');
@@ -344,7 +362,7 @@ export function downloadLP() {
 
 
 export function import_click() {
-  console.log("Importing...");
+  console.log("importing");
 }
 
 
