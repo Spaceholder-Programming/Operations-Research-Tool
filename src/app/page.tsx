@@ -1,58 +1,80 @@
 'use client'
 
+import React, { useState } from 'react';
 import { Box, Button, Output } from "./modules";
-import { calculate_click, downloadLP, import_click } from "./scripts"
+import { calculate_clickMaximize, calculate_clickMinimize, downloadLP, import_click } from "./scripts"
+import text from "./lang"
 
 export default function Home() {
+  const [language, setLanguage] = useState('eng');
+  const tr_hTitle = text(language, 'header_title');
+  const tr_hSubtitle = text(language, 'header_subtitle');
+  const tr_boxObjTitle = text(language, 'boxObjTitle');
+  const tr_boxObjDesc = text(language, "boxObjDesc");
+  const tr_boxSubjTitle = text(language, 'boxSubjTitle');
+  const tr_boxSubjDesc = text(language, "boxSubjDesc");
+  const tr_boxBoundsTitle = text(language, 'boxBoundsTitle');
+  const tr_boxBoundsDesc = text(language, "boxBoundsDesc");
+  const tr_boxVarsTitle = text(language, 'boxVarsTitle');
+  const tr_boxVarsDesc = text(language, "boxVarsDesc");
+  const tr_boxOut = text(language, "boxOut");
+  const tr_boxExportLP = text(language, "boxExportLP");
+  const tr_calc_max = text(language, "maximize");
+  const tr_calc_min = text(language, "minimize");
+
+  const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setLanguage(event.target.value);
+  };
+
   return (
     <>
       <header className="header">
         <div className="title">
           <main className="header_box">
-            Operations Research Tool
+            {tr_hTitle}
             <br></br>
             <span className="header_copyright">
-              <i>by Spaceholder Programming</i>
-            </span>
+              <i>{tr_hSubtitle}</i>
+            </span><br></br>
+            <select id="language_current" value={language} onChange={handleLanguageChange} className="dropdown-custom">
+              <option value="ger">Deutsch</option>
+              <option value="eng">English</option>
+            </select>
           </main>
         </div>
       </header>
       <Box
-        title={"Objective"}
-        placeholder={"Insert your objective here. One objective is allowed. Use one line for it (no \"return\"!) Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\nx + y\n-786433 x1 + 655361 x2"}
-        id="objective"/>
+        title={tr_boxObjTitle}
+        placeholder={tr_boxObjDesc}
+        id="objective" />
       <Box
-        title={"Subject"}
-        placeholder={"Insert your subject here. One per line (divide by 'return' button). Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\n+1 x + 2 y <= 15\n524321 x14 + 524305 x15 <= 4194303.5"}
-        id="subject"/>
+        title={tr_boxSubjTitle}
+        placeholder={tr_boxSubjDesc}
+        id="subject" />
       <Box
-        title={"Bounds"}
-        placeholder={"Insert your bounds here. One per line (divide by 'return' button). Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\nx >= 0\nx > 0\n0 <= x1 <= 1"}
-        id="bounds"/>
+        title={tr_boxBoundsTitle}
+        placeholder={tr_boxBoundsDesc}
+        id="bounds" />
       <Box
-        title={"Variables"}
-        placeholder={"List all your variables. One per line (divide by 'return' button). Allowed symbols are a-z, A-Z.\nExample:\nx\ny"}
+        title={tr_boxVarsTitle}
+        placeholder={tr_boxVarsDesc}
         id="vars" />
       <Button
-        title={"Calculate"}
+        title={tr_calc_max}
         className={"button_green"}
-        onClickFunc={calculate_click} />
-      {/* <Popup_Button
-        title={"Import"}
-        className={"button"} /> */}
+        onClickFunc={calculate_clickMaximize} />
       <Button
-        title={"Export as LP"}
+        title={tr_calc_min}
+        className={"button_green"}
+        onClickFunc={calculate_clickMinimize} />
+      <Button
+        title={tr_boxExportLP}
         className={"button"}
         onClickFunc={downloadLP} />
       <br></br>
       <Output
         id="out"
-        text={"Input a problem and an action button to display output..."}/>
-      {/* <Popup_Button
-        title="Popup"
-        className="button"
-        /> */}
-
+        text={tr_boxOut} />
     </>
   );
 }
