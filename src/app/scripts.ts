@@ -8,7 +8,7 @@ import { start } from "repl";
 import text from "./lang"
 
 // custom log so we can append the output dynamically
-function customLog(input: string) {
+export function customLog(input: string) {
   // get language
   const lang = (document.getElementById('language_current') as HTMLSelectElement)?.value;
 
@@ -25,14 +25,14 @@ function customLog(input: string) {
   }
 }
 
-function customLogClear() {
+export function customLogClear() {
   const outElement = document.getElementById('out');
   if (outElement) {
     outElement.innerHTML = "";
   }
 }
 
-function getTranslation(input: string) {
+export function getTranslation(input: string) {
   // get language
   const lang = (document.getElementById('language_current') as HTMLSelectElement)?.value;
 
