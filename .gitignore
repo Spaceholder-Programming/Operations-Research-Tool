@@ -890,5 +890,3 @@ next-env.d.ts
 
 # Writerside
 /Writerside
-
-package-lock.json
