@@ -33,6 +33,11 @@ Navigate towards the folder, where the project is located on your machine via te
 Afterwards, execute the following command:
 
 ```Bash
+npm install
+```
+This installs the necessary dependencies.
+Next execute:
+```Bash
 npm build
 ```
 #### Run 
