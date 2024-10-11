@@ -22,6 +22,7 @@ const GlpPage = () => {
     const tr_SpecProblems = text(language, 'SpecProblem');
     const tr_fileUpload = text(language, 'FileUpload');
     const tr_fileName = text(language, 'FileName');
+    const tr_DownloadGmpl = text(language, 'download_gmpl');
 
 
 
@@ -180,7 +181,7 @@ const GlpPage = () => {
 
             const endTime = performance.now();
             const solverDuration = ((endTime - startTime) / 1000).toFixed(2);
-            setSolverTime(`Solver time: ${solverDuration} seconds`);
+            setSolverTime(`{tr_solverTime}: ${solverDuration} seconds`);
             addMessage(`Solver time: ${solverDuration} seconds`);
 
             let status;
@@ -211,7 +212,7 @@ const GlpPage = () => {
                 variables += `${GLPKAPI.glp_get_col_name(lp, i)} = ${GLPKAPI.glp_mip_col_val(lp, i)}\n`;
             }
             if (solverTimeoutRef.current) clearTimeout(solverTimeoutRef.current);
-            setResultContent(`${result}\n\n${variables}\n\nSolver time: ${solverDuration} seconds`);
+            setResultContent(`${result}\n\nOptimal Value: ${GLPKAPI.glp_mip_obj_val(lp)}\n\n${variables}\n\nSolver time: ${solverDuration} seconds`);
             setShowPopup(true);
 
         } catch (err) {
@@ -300,7 +301,7 @@ const GlpPage = () => {
                                     rows={getTextAreaHeight(fileContent)}
                                 />
                                 <button className="button" onClick={downloadFile}>
-                                    Download GMPL File
+                                    {tr_DownloadGmpl}
                                 </button>
                             </div>
                         )}
@@ -313,7 +314,6 @@ const GlpPage = () => {
                 )}
 
                 <div id="msgZone" className="msgZone"></div>
-                <div>{solverTime}</div> {/* Display Solver Time */}
 
                 {/* Syntax Errors 
                 {syntaxErrors.length > 0 && (
