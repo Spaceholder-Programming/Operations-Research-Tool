@@ -1,19 +1,16 @@
-'use client'
+'use client';
 
+import { useRouter } from 'next/navigation'; 
 import React, { useState, useContext } from 'react';
-import { Box, Button, Output } from "./modules";
-import { calculate_click, downloadLP, downloadMPS } from "./scripts";
-import text from "./lang";
-import { spec } from 'node:test/reporters';
-import { useRouter } from 'next/navigation';
-import { LanguageContext } from './context/LanguageContext';
+import text from "../lang";
+import { LanguageContext } from '../context/LanguageContext';
 
-export default function Home() {
+
+const GlpPage = () => {
+  const router = useRouter(); 
+
   const { language, setLanguage } = useContext(LanguageContext);
-  const [maxminOption, setMaxminOption] = useState('maximize');
-  const [model] = useState('spec');
-  const router = useRouter();
-  
+  const [model, setModel] = useState('gen');
 
   const tr_hTitle = text(language, 'header_title');
   const tr_hSubtitle = text(language, 'header_subtitle');
@@ -38,19 +35,15 @@ export default function Home() {
 
   const changeModel = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedModel = event.target.value;
+    setModel(selectedModel);
 
-    if (selectedModel === 'gen') {
-      router.push('./glp');
+    if (selectedModel === 'spec') {
+      router.push('/'); 
     }
   };
 
-  const handleMaxMinChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setMaxminOption(event.target.value);
-  };
-    
   return (
-    <>
-      <header className="header">
+    <header className="header">
         <div className="title">
           <main className="header_box">
             {tr_hTitle}
@@ -70,49 +63,7 @@ export default function Home() {
           </main>
         </div>
       </header>
-      <Box
-        title={tr_boxObjTitle}
-        placeholder={tr_boxObjDesc}
-        id="objective"
-      />
-      <Box
-        title={tr_boxSubjTitle}
-        placeholder={tr_boxSubjDesc}
-        id="subject"
-      />
-      <Box
-        title={tr_boxBoundsTitle}
-        placeholder={tr_boxBoundsDesc}
-        id="bounds"
-      />
-      <Box
-        title={tr_boxVarsTitle}
-        placeholder={tr_boxVarsDesc}
-        id="vars"
-      />
-      <select id="maxminswitch" value={maxminOption} onChange={handleMaxMinChange} className="dropdown-custom-maxmin">
-        <option value="maximize">{tr_calc_max}</option>
-        <option value="minimize">{tr_calc_min}</option>
-      </select>
-      <Button
-        title={tr_calcButton}
-        className={"button_green"}
-        onClickFunc={calculate_click}
-      />
-      <Button
-        title={tr_boxExportLP}
-        className={"button"}
-        onClickFunc={downloadLP}
-      />
-      <Button
-        title={tr_boxExportMPS}
-        className={"button"}
-        onClickFunc={downloadMPS} />
-      <br />
-      <Output
-        id="out"
-        text={tr_boxOut}
-      />
-    </>
   );
-}
+};
+
+export default GlpPage;

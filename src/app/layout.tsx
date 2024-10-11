@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import  Image from "next/image";
 import localFont from "next/font/local";
+import { LanguageProvider } from './context/LanguageContext'; // Importiere den Provider
 import "./globals.css";
 
 const geistSans = localFont({
@@ -19,16 +20,21 @@ export const metadata: Metadata = {
   description: "OR-Tool by Spaceholder Programming",
 };
 
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
+
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <LanguageProvider>
+          {children} {}
+        </LanguageProvider>
         {children}
         <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
           <footer className=" flex gap-6 flex-wrap items-center justify-center">
