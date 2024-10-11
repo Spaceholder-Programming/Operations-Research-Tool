@@ -128,7 +128,7 @@ function isInputFilled(obj: string | undefined, subj: string | undefined, bounds
   return true;
 }
 
-function calculate_click(maximize: boolean) {
+export function calculate_click(maximize: boolean) {
   customLogClear();
   const timer = walltimeStart();
   customLog("calculating");
