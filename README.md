@@ -66,5 +66,3 @@ If you have the desire to contact the team behind this project, use the contact 
 + [widepoeppihappy](https://github.com/widepoeppihappy)
 # Troubleshooting
 If you find bug, please contact us by [creating an issue](https://github.com/Spaceholder-Programming/Operations-Research-Tool/issues/new).
-
-
