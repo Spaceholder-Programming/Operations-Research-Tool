@@ -172,3 +172,13 @@ body {
 .dropdown-custom:hover {
   background-color: #444;
 }
+
+.dropdown-custom-maxmin {
+  width: 150px;
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
