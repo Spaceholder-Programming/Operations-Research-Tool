@@ -134,6 +134,14 @@ function calculate_click(maximize: boolean) {
   customLog("calculating");
   customLog("");
 
+  let direction: string;
+  const directionElement = document.getElementById('direction');
+  if (directionElement !== null) {
+    direction = (directionElement as HTMLInputElement).value;
+  } else {
+    direction = "Min";
+  }
+
   let objective: string | undefined;
   const objectiveElement = document.getElementById('objective');
   if (objectiveElement !== null) {
@@ -164,31 +172,38 @@ function calculate_click(maximize: boolean) {
   // catch error: variables field has invalid characters
   if (!isInputValidRegex(objective, subject, bounds, variables)) return;
 
-  // fetch operator
-  let operator = "Minimize";
-  if (maximize) operator = "Maximize";
+  let wholeText: string = "";
 
-  let wholeText: string = operator + "\n obj: " + objective
-    + "\nSubject To \n" + subject
-    + "\nBounds \n" + bounds
-    + "\nGenerals \n" + variables
-    + "\nEnd";
+  if (direction == "Min") {
+    wholeText = wholeText + "Minimize\n obj: ";
+  } else {
+    wholeText = wholeText + "Maximize\n obj: ";
+  }
+  wholeText = wholeText + objective
+                        + "\nSubject To \n" + subject 
+                        + "\nBounds \n" + bounds
+                        + "\nGenerals \n" + variables
+                        + "\nEnd";
 
   // customLog("<br><br>DEBUGGING<br><br>\nfunctions:<br>" + functions + "<br><br>variables:<br>" + variables + "<br><br>DEBUGGING END<br>");
 
-  customLog(getTranslation("run_optimization") + ": \"" + wholeText + "\"");
-  customLog("");
-  run(wholeText);
+  customLog("Running optimization with input: \"" + wholeText + "\"<br>");
+  run(wholeText, direction);
 
   walltimeStopAndPrint(timer);
 }
 
-function run(text: string) {
-  customLog("startProblemSetup");
+function run(text: string, direction: string) {
+  customLog("Starting problem setup...");
   let lp = GLPKAPI.glp_create_prob();
   GLPKAPI.glp_read_lp_from_string(lp, null, text);
-  customLog("succProblemSetup");
-  customLog("");
+  customLog("++++++ Direction: " + direction);
+  if(direction == "Min") {
+    GLPKAPI.glp_set_obj_dir(lp, GLPKAPI.GLP_MAX);
+  } else if(direction == "Min"){
+    GLPKAPI.glp_set_obj_dir(lp, GLPKAPI.GLP_MIN);
+  }
+  customLog("Problem created.<br>");
 
   customLog("startScaling");
   GLPKAPI.glp_scale_prob(lp, GLPKAPI.GLP_SF_AUTO);
