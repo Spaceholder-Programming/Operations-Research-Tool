@@ -847,3 +847,7 @@ FodyWeavers.xsd
 
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
+/.idea/.gitignore
+/.idea/modules.xml
+/.idea/Operations-Research-Tool.iml
+/.idea/vcs.xml
