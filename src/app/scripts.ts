@@ -64,6 +64,7 @@ function walltimeStart() {
 
 export function isInputValidRegex(obj: string | undefined, subj: string | undefined, bounds: string | undefined, vars: string | undefined): boolean {
   customLog("input_checks_start");
+  customLog("");
 
   // standard case: input is undefined - invalid
   if (obj === undefined || obj === null || subj === undefined || subj === null || bounds === undefined || bounds === null || vars === undefined || vars === null) {
