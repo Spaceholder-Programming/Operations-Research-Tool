@@ -158,9 +158,9 @@ const GlpPage = () => {
         const { signal } = solverAbortController.current;
 
         try {
-            var model = fileContent;
-            var lp = GLPKAPI.glp_create_prob();
-            var tran = GLPKAPI.glp_mpl_alloc_wksp();
+            let model = fileContent;
+            let lp = GLPKAPI.glp_create_prob();
+            let tran = GLPKAPI.glp_mpl_alloc_wksp();
             GLPKAPI._glp_mpl_init_rand(tran, 1);
 
             GLPKAPI.glp_mpl_read_model_from_string(tran, "model", model, 0);
@@ -168,10 +168,10 @@ const GlpPage = () => {
             addMessage("Model successfully converted to solver format.");
 
             GLPKAPI.glp_mpl_build_prob(tran, lp);
-            var smcp = new GLPKAPI.SMCP({ presolve: GLPKAPI.GLP_ON });
+            let smcp = new GLPKAPI.SMCP({ presolve: GLPKAPI.GLP_ON });
             GLPKAPI.glp_simplex(lp, smcp);
 
-            var iocp = new GLPKAPI.IOCP({ presolve: GLPKAPI.GLP_ON });
+            let iocp = new GLPKAPI.IOCP({ presolve: GLPKAPI.GLP_ON });
             GLPKAPI.glp_intopt(lp, iocp);
             GLPKAPI.glp_mpl_postsolve(tran, lp, GLPKAPI.GLP_MIP);
 
@@ -183,7 +183,7 @@ const GlpPage = () => {
             setSolverTime(`Solver time: ${solverDuration} seconds`);
             addMessage(`Solver time: ${solverDuration} seconds`);
 
-            var status;
+            let status;
             switch (GLPKAPI.glp_mip_status(lp)) {
                 case GLPKAPI.GLP_OPT:
                     status = "OPTIMAL";
@@ -207,7 +207,7 @@ const GlpPage = () => {
 
             const result = `Solution status: ${status}`;
             let variables = "Variable results:\n";
-            for (var i = 1; i <= GLPKAPI.glp_get_num_cols(lp); i++) {
+            for (let i = 1; i <= GLPKAPI.glp_get_num_cols(lp); i++) {
                 variables += `${GLPKAPI.glp_get_col_name(lp, i)} = ${GLPKAPI.glp_mip_col_val(lp, i)}\n`;
             }
             if (solverTimeoutRef.current) clearTimeout(solverTimeoutRef.current);
