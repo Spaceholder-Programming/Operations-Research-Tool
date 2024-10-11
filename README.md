@@ -1,7 +1,6 @@
 # University-Operations-Research-Tool
 This projects aims to create a tool for easy calculation of operations research modules on different device platforms.
 
-
 ## Table of Contents
 - [Features](#features) 
 - [Installation/Access](#installationaccess)
@@ -11,6 +10,7 @@ This projects aims to create a tool for easy calculation of operations research 
 - [Licence](#licence)
 - [Contact](#contact)
 - [Troubleshooting](#troubleshooting)
+
 ## Features
  - Export as LP (Linear Programming)
  - Measuring elapsed real time 
