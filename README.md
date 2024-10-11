@@ -32,7 +32,11 @@ git clone https://github.com/Spaceholder-Programming/Operations-Research-Tool.gi
 Navigate towards the folder, where the project is located on your machine via terminal.
 Afterwards, execute the following command:
 
-
+```Bash
+npm install
+```
+This installs the necessary dependencies.
+Next execute:
 ```Bash
 npm build
 ```
