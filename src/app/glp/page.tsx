@@ -16,16 +16,6 @@ const GlpPage = () => {
 
     const tr_hTitle = text(language, 'header_title');
     const tr_hSubtitle = text(language, 'header_subtitle');
-    //  const tr_boxObjTitle = text(language, 'boxObjTitle');
-    //  const tr_boxObjDesc = text(language, "boxObjDesc");
-    //  const tr_boxSubjTitle = text(language, 'boxSubjTitle');
-    //  const tr_boxSubjDesc = text(language, "boxSubjDesc");
-    //  const tr_boxBoundsTitle = text(language, 'boxBoundsTitle');
-    //  const tr_boxBoundsDesc = text(language, "boxBoundsDesc");
-    //  const tr_boxVarsTitle = text(language, 'boxVarsTitle');
-    //  const tr_boxVarsDesc = text(language, "boxVarsDesc");
-    //  const tr_boxOut = text(language, "boxOut");
-    const tr_boxExportLP = text(language, "boxExportLP");
     const tr_calcButton = text(language, "buttonCalc");
     const tr_GmplTitle = text(language, 'GmplHeader');
     const tr_GenProblems = text(language, 'GenProblem');
@@ -43,11 +33,11 @@ const GlpPage = () => {
     const [solverTime, setSolverTime] = useState<string>('');
     const [showPopup, setShowPopup] = useState(false);
     const [resultContent, setResultContent] = useState<string>('');
-    const [syntaxErrors, setSyntaxErrors] = useState<string[]>([]);
+    //const [syntaxErrors, setSyntaxErrors] = useState<string[]>([]);
     const [showErrorPopup, setShowErrorPopup] = useState(false);
     const solverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const solverAbortController = useRef<AbortController | null>(null);
-    const [highlightedContent, setHighlightedContent] = useState<string>('');
+    //const [highlightedContent, setHighlightedContent] = useState<string>('');
     const [fileName, setFileName] = useState<string>("");
 
 
@@ -64,11 +54,11 @@ const GlpPage = () => {
         }
     };
 
-    useEffect(() => {
-        if (syntaxErrors.length > 0) {
-            setShowErrorPopup(true);
-        }
-    }, [syntaxErrors]);
+    //useEffect(() => {
+    //    if (syntaxErrors.length > 0) {
+    //       setShowErrorPopup(true);
+    //    }
+    //}, [syntaxErrors]);
 
     const addMessage = (message: string) => {
         const msgZone = document.getElementById("msgZone");
@@ -77,10 +67,10 @@ const GlpPage = () => {
         }
     };
 
-    const updateHighlightedContent = (content: string) => {
-        const highlighted = highlightErrors(content);
-        setHighlightedContent(highlighted);
-    };
+   // const updateHighlightedContent = (content: string) => {
+   //     const highlighted = highlightErrors(content);
+   //     setHighlightedContent(highlighted);
+   // };
 
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,50 +84,50 @@ const GlpPage = () => {
         reader.onload = (e) => {
             const content = e.target?.result as string;
             setFileContent(content);
-            updateHighlightedContent(content);
+         //   updateHighlightedContent(content);
             addMessage("File successfully uploaded and read.");
             setIsFileUploaded(true);
 
             // Perform syntax check
-            const errors = checkSyntax(content);
-            setSyntaxErrors(errors);
-            updateHighlightedContent(content);
+            //const errors = checkSyntax(content);
+            //setSyntaxErrors(errors);
+         //   updateHighlightedContent(content);
         };
         reader.readAsText(file);
     };
 
-    const checkSyntax = (content: string): string[] => {
-        const errors: string[] = [];
-        const lines = content.split("\n");
-
-        const ignorePattern = /^(#|\/\/|printf|\/\*|\*).*$/;
-
-        lines.forEach((line, index) => {
-            if (ignorePattern.test(line) || line.trim() === "") {
-                return; // Ignore this line
-            }
-
-            const validGmplLinePattern = /^(var|param|set|maximize|minimize|s\.t\.|subject to|for|in|if|then|else|end|:=|<=|>=|=|\+|\-|\*|\/|[a-zA-Z_][a-zA-Z0-9_]*\s*[=<>+\-*/]*\s*[0-9a-zA-Z_]+.*;)/;
-
-            if (!validGmplLinePattern.test(line)) {
-                errors.push(`Syntax error on line ${index + 1}: ${line}`);
-            }
-        });
-
-        return errors;
-    };
+    //const checkSyntax = (content: string): string[] => {
+    //    const errors: string[] = [];
+    //    const lines = content.split("\n");
+    //
+    //   const ignorePattern = /^(#|\/\/|printf|\/\*|\*).*$/;
+    //
+    //   lines.forEach((line, index) => {
+    //        if (ignorePattern.test(line) || line.trim() === "") {
+    //           return; // Ignore this line
+    //        }
+    //
+    //        const validGmplLinePattern = /^(var|param|set|maximize|minimize|s\.t\.|subject to|for|in|if|then|else|end|:=|<=|>=|=|\+|\-|\*|\/|[a-zA-Z_][a-zA-Z0-9_]*\s*[=<>+\-*/]*\s*[0-9a-zA-Z_]+.*;)/;
+    //
+    //        if (!validGmplLinePattern.test(line)) {
+    //            errors.push(`Syntax error on line ${index + 1}: ${line}`);
+    //        }
+    //    });
+    //
+    //    return errors;
+    //};
 
     // Highlight syntax errors in the file content
-    const highlightErrors = (content: string) => {
-        const lines = content.split("\n");
-        return lines.map((line, index) => {
-            const error = syntaxErrors.find((error) => error.includes(`line ${index + 1}`));
-            if (error) {
-                return `<span style="background-color: yellow; color: black;" title="${error}">${line}</span>`;
-            }
-            return line;
-        }).join("\n");
-    };
+    //const highlightErrors = (content: string) => {
+    //    const lines = content.split("\n");
+    //    return lines.map((line, index) => {
+    //        const error = syntaxErrors.find((error) => error.includes(`line ${index + 1}`));
+    //        if (error) {
+    //            return `<span style="background-color: yellow; color: black;" title="${error}">${line}</span>`;
+    //        }
+    //        return line;
+    //    }).join("\n");
+    //};
 
     // Function to dynamically set the height of the textarea
     const getTextAreaHeight = (value: any) => {
@@ -231,7 +221,6 @@ const GlpPage = () => {
         }
     };
 
-    // Function to download the modified file
     const downloadFile = () => {
         const element = document.createElement("a");
         const file = new Blob([fileContent], { type: 'text/plain' });
@@ -306,7 +295,7 @@ const GlpPage = () => {
                                     value={fileContent}
                                     onChange={(e) => {
                                         setFileContent(e.target.value);
-                                        updateHighlightedContent(e.target.value);
+                                        //updateHighlightedContent(e.target.value);
                                     }}
                                     rows={getTextAreaHeight(fileContent)}
                                 />
@@ -326,7 +315,7 @@ const GlpPage = () => {
                 <div id="msgZone" className="msgZone"></div>
                 <div>{solverTime}</div> {/* Display Solver Time */}
 
-                {/* Syntax Errors */}
+                {/* Syntax Errors 
                 {syntaxErrors.length > 0 && (
                     <div className="syntaxErrorBox">
                         <h3>Syntax Errors</h3>
@@ -337,13 +326,15 @@ const GlpPage = () => {
                         </ul>
                     </div>
                 )}
+                    */}
 
-                {/* Syntax Error Popup */}
+                {/* Syntax Error Popup 
                 {showErrorPopup && (
                     <div className="errorPopup">
                         <p>There are syntax errors in the file.</p>
                     </div>
                 )}
+                */}
 
                 {/* Result Popup */}
                 {showPopup && (
