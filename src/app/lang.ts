@@ -6,6 +6,10 @@ export default function text(lang: string, input: string): string {
                 return "OR-Tool";
                 case "header_subtitle":
                     return "von Spaceholder Programming";
+                case "download_gmpl":
+                    return "GMPL-Datei herunterladen";
+                case "solver_time_lang":
+                    return "Solver Laufzeit";
                 case "boxObjTitle":
                     return "Ziel";
                 case "GmplHeader":
@@ -119,6 +123,10 @@ export default function text(lang: string, input: string): string {
     // English translation
     if (lang === "eng") {
         switch (input) {
+            case "download_gmpl":
+                return  "Download GMPL-File";
+            case "solver_time_lang":
+                return "Solver Time";
             case "GmplHeader":
                 return "General Linear Problems";
             case "SpecProblem":
