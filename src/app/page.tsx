@@ -32,7 +32,7 @@ export default function Home() {
   const handleMaxMinChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setMaxminOption(event.target.value); // Update den Zustand basierend auf dem Wert des Selects
   };
-
+    
   return (
     <>
       <header className="header">
