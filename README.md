@@ -3,57 +3,66 @@ This projects aims to create a tool for easy calculation of operations research 
 
 ## Table of Contents
 - [Features](#features) 
-- [Installation](#installation)
+- [Installation/Access](#installationaccess)
 - [Usage](#usage)
-- [Supported problem Types](#supported-problem-types)
+- [Supported problem types](#supported-problem-types)
 - [Contributing](#contributing)
 - [Licence](#licence)
 - [Contact](#contact)
 - [Troubleshooting](#troubleshooting)
-## Features 
-ToDo
-## Installation 
-### On web
-You can always use the OR-Tool [without any installation](https://spaceholder-programming.github.io/Operations-Research-Tool/).
+
+## Features
+ - Export as LP (Linear Programming)
+ - Measuring elapsed real time 
+ - Logging
+ - Solving via GLPK and HiGHS
+
+## Installation/Access
+### Online
+You can always access the Tool without any installation on our [GitHub Pages instance](https://spaceholder-programming.github.io/Operations-Research-Tool/).
 ### Local
-1. Install dependencies:
-This project relies on [NextJs](https://nextjs.org/). Please follow its [installation instructions](https://nextjs.org/docs/getting-started/installation) to get everything ready.
-2. Clone the repository:
+#### Install dependencies
+This project relies on [NextJs](https://nextjs.org/). Please follow its [installation instructions](https://nextjs.org/docs/getting-started/installation) to get everything ready. 
+#### Clone the repository
+Using Git:
 ```Bash
 git clone https://github.com/Spaceholder-Programming/Operations-Research-Tool.git
 ```
-3. Build the site:
-Open the folder where the project was saved in PowerShell (or your favorite console). Then build the site:
+#### Building the site
+Navigate towards the folder, where the project is located on your machine via terminal.
+Afterwards, execute the following command:
+
 ```Bash
 npm build
 ```
-4. Run it:
+#### Run 
 ```
 npm start
 ```
-5. Access the OR-Tool using your browser:
-Usually it starts on port 3000. [This link](http://localhost:3000) should work. Otherwise check your console for the link.
-## Usage
+#### Access the Tool using your browser:
+You can access the tool via browser on your machine. The default port is 3000. 
 
+If you can not reach the tool under [this link](http://localhost:3000), the default port is blocked and you have to check the terminal to get the correct port. 
+
+## Usage
 ToDo
-### Supported problem Types
+### Supported problem types
 + Linear
 + Mixed Integer
 
 ## Contributing
 1. Fork the repository
-2. Create a new branch: `git checkout -b Featurename`
+2. Create a new branch: `git checkout -b featurename`
 3. Implement your changes
 4. Push your branch: `git push origin featurename`
 5. Create a pull request
 # Licence
-
-For further information, please check out the [LICENSE](https://github.com/Spaceholder-Programming/Operations-Research-Tool/blob/main/LICENCE.md).
+This project is licensed under the [MIT License](https://github.com/Spaceholder-Programming/Operations-Research-Tool?tab=MIT-1-ov-file).
 # Contact
 If you have the desire to contact the team behind this project, use the contact details on our GitHub accounts:
 + [bRNS98](https://github.com/bRNS98)
-+ [moebiusl](https://giothub.com/moebiusl)
++ [moebiusl](https://github.com/moebiusl)
 + [SinusFox](https://github.com/SinusFox)
 + [widepoeppihappy](https://github.com/widepoeppihappy)
 # Troubleshooting
-If you find erros in the code, please contact us by [creating an issue](https://github.com/Spaceholder-Programming/Operations-Research-Tool/issues/new).
+If you find bug, please contact us by [creating an issue](https://github.com/Spaceholder-Programming/Operations-Research-Tool/issues/new).
