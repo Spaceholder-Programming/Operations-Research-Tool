@@ -11,7 +11,7 @@ import { LanguageContext } from './context/LanguageContext';
 export default function Home() {
   const { language, setLanguage } = useContext(LanguageContext);
   const [maxminOption, setMaxminOption] = useState('maximize');
-  const [model] = useState('spec');
+  const [model, selectedModel] = useState('spec');
   const router = useRouter();
   
 
@@ -39,9 +39,9 @@ export default function Home() {
   };
 
   const changeModel = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedModel = event.target.value;
+    selectedModel(event.target.value);
 
-    if (selectedModel === 'gen') {
+    if (event.target.value === 'gen') {
       router.push('./glp');
     }
   };

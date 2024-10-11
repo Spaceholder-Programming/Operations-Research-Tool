@@ -20,6 +20,13 @@ jest.mock('../src/solver/glpk.min.js', () => ({
 // Mocking console.log
 const consoleLogMock = jest.spyOn(console, 'log').mockImplementation(() => {});
 
+// Mock useRouter to avoid invariant error
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(), // Mock the 'push' function
+  })),
+}));
+
 beforeEach(() => {
     document.body.innerHTML = `
       <div>
@@ -90,7 +97,7 @@ test('calculate_click should display "Calculating" in the output box', () => {
     document.getElementById('bounds').value = 'x <= 5';
     document.getElementById('vars').value = 'x\ny';
 
-    // Simuliere den Button-Klick, der die Berechnung startet
+    // Simulate the button click to trigger calculation
     fireEvent.click(screen.getByText('Calculate'));
 
     // Check the contents of out box
@@ -101,4 +108,3 @@ test('calculate_click should display "Calculating" in the output box', () => {
     mockClear.mockRestore();
     mockLog.mockRestore();
 });
-
