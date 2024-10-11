@@ -31,6 +31,8 @@ export default function Home() {
   const tr_calc_min = text(language, "minimize");
   const tr_calcButton = text(language, "buttonCalc");
   const tr_boxExportMPS = text(language, "boxExportMPS");
+  const tr_GenProblems = text(language, 'GenProblem');
+  const tr_SpecProblems = text(language, 'SpecProblem');
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(event.target.value);
@@ -64,8 +66,8 @@ export default function Home() {
               <option value="eng">English</option>
             </select>
             <select id="language_current" value={model} onChange={changeModel} className="dropdown-custom">
-              <option value="gen">General Problems</option>
-              <option value="spec">Specific Problems</option>
+            <option value="gen">{tr_GenProblems}</option>
+            <option value="spec">{tr_SpecProblems}</option>
             </select>
           </main>
         </div>

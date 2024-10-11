@@ -8,6 +8,16 @@ export default function text(lang: string, input: string): string {
                     return "von Spaceholder Programming";
                 case "boxObjTitle":
                     return "Ziel";
+                case "GmplHeader":
+                    return "Allgemeine Lineare Probleme";
+                case "FileUpload":
+                    return "Datei hochladen";
+                case "FileName":
+                    return "Kein File ausgewählt";
+                case "SpecProblem":
+                    return "Spezifisches Problem";
+                case "GenProblem":
+                    return "Allgemeines Lineares Problem";
                 case "boxObjDesc":
                     return "Geben Sie Ihr Ziel hier ein. Es ist nur ein Ziel erlaubt. Verwenden Sie eine Zeile dafür (kein 'Enter'!). Erlaubte Symbole sind 0-9, a-z, A-Z und <>=.\nBeispiel:\nx + y\n-786433 x1 + 655361 x2";
                 case "boxSubjTitle":
@@ -109,6 +119,16 @@ export default function text(lang: string, input: string): string {
     // English translation
     if (lang === "eng") {
         switch (input) {
+            case "GmplHeader":
+                return "General Linear Problems";
+            case "SpecProblem":
+                return "Specific Problem";
+            case "FileUpload":
+                return "Upload File";
+            case "FileName":
+                return "No File selected";
+            case "GenProblem":
+                return "General Linear Problems";
             case "header_title":
                 return "OR-Tool";
             case "header_subtitle":
@@ -116,8 +136,8 @@ export default function text(lang: string, input: string): string {
             case "boxObjTitle":
                 return "Objective";
             case "boxObjDesc":
-                return "Insert your objective here. One objective is allowed. Use one line for it (no \"return\"!) Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\nx + y\n-786433 x1 + 655361 x2";
-            case "boxSubjTitle":
+                return "Insert your objective here. One objective is allowed. Use one line for it (no \"return\"!) Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\nx + y\n-786433 x1 + 655361 x2";            
+                case "boxSubjTitle":
                 return "Subject";
             case "boxSubjDesc":
                 return "Insert your subject here. One per line (divide by 'return' button). Allowed symbols are 0-9, a-z, A-Z and <>=.\nExample:\n+1 x + 2 y <= 15\n524321 x14 + 524305 x15 <= 4194303.5";

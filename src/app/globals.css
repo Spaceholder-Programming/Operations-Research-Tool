@@ -61,6 +61,14 @@ body {
   padding: 10px;
 }
 
+.button_spec {
+  border: 2px solid #5353535c;
+  background-color: #1010105c;
+  border-radius: 20px;
+  margin: 10px;
+  padding: 20px;
+}
+
 .button:hover {
   border: 2px solid #5353535c;
   background-color: #5353535c;
@@ -185,4 +193,164 @@ body {
   margin: 10px;
   font-size: 16px;
   cursor: pointer;
+}
+
+.containerGmpl {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  padding: 20px;
+  background-color: #2a2a2a;
+  border-radius: 10px;
+  border: 1px solid #8d8d8d;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.headerGmpl {
+  font-size: 24px;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.fileInput {
+  margin-bottom: 20px;
+}
+
+.buttoncontainerGmpl {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.buttonGmpl {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.togglebuttonGmpl {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.fileContentBox {
+  background-color: #3c3c3c;
+  color: #ffffff;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  white-space: pre-line;
+}
+
+.textarea {
+  width: 100%;
+  background-color: #202020;
+  color: #ffffff;
+  border: 1px solid #8d8d8d;
+  border-radius: 5px;
+  padding: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  margin-bottom: 10px;
+  overflow: scroll;
+  max-height: 800px;
+  min-height: 400px;
+}
+
+.downloadbuttonGmpl {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.loadingSpinner {
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pre {
+  margin: 0;
+}
+
+.subheaderGmpl {
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.msgZone {
+  margin-top: 20px;
+  color: #ffcc00;
+  background-color: #333;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.syntaxErrorBox {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #ffcc00;
+  border-radius: 5px;
+  color: #333;
+}
+
+.errorPopup {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px;
+  background-color: #ffcc00;
+  color: #333;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popupContent {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+  width: 80%;
+  max-width: 600px;
+}
+
+.popupResult {
+  max-height: 300px;
+  overflow-y: auto;
+  text-align: left;
+  padding: 10px;
+  border: 1px solid #8d8d8d;
+  background-color: #202020;
+  color: #ffffff;
+  border-radius: 5px;
 }
