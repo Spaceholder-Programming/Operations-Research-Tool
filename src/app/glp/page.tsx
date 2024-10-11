@@ -164,7 +164,7 @@ const GlpPage = () => {
             GLPKAPI._glp_mpl_init_rand(tran, 1);
 
             GLPKAPI.glp_mpl_read_model_from_string(tran, "model", model, 0);
-            GLPKAPI.glp_mpl_generate(tran, null, function (data) { });
+            GLPKAPI.glp_mpl_generate(tran, null, function () { });
             addMessage("Model successfully converted to solver format.");
 
             GLPKAPI.glp_mpl_build_prob(tran, lp);
