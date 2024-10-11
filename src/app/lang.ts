@@ -24,6 +24,8 @@ export default function text(lang: string, input: string): string {
                     return "Listen Sie alle Ihre Variablen auf. Eine pro Zeile (mit der 'Enter'-Taste trennen). Erlaubte Symbole sind a-z, A-Z.\nBeispiel:\nx\ny";
                 case "boxExportLP":
                     return "Als LP exportieren";
+                case "boxExportMPS":
+                    return "Als MPS exportieren";
                 case "boxOut":
                     return "Geben Sie ein Problem ein und drücken Sie eine Aktionstaste, um die Ausgabe anzuzeigen...";
                 case "buttonCalc":
@@ -92,6 +94,8 @@ export default function text(lang: string, input: string): string {
                     return "Download wird vorbereitet...";
                 case "downloadFetchInput":
                     return "Eingaben werden geladen...";
+                case "downloadCheckInput":
+                    return "Überprüfe auf leere Eingabefelder...";
                 case "importing":
                     return "Importiere...";
             default:
@@ -125,6 +129,8 @@ export default function text(lang: string, input: string): string {
                 return "List all your variables. One per line (divide by 'return' button). Allowed symbols are a-z, A-Z.\nExample:\nx\ny";
             case "boxExportLP":
                 return "Export as LP";
+            case "boxExportMPS":
+                return "Export as MPS";
             case "boxOut":
                 return "Input a problem and an action button to display output...";
             case "buttonCalc":
@@ -193,6 +199,8 @@ export default function text(lang: string, input: string): string {
                 return "Preparing download...";
             case "downloadFetchInput":
                 return "Fetching input...";
+            case "downloadCheckInput":
+                return "Checking for empty input boxes...";
             case "importing":
                 return "Importing...";
             default:

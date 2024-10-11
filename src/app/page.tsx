@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Box, Button, Output } from "./modules";
-import { calculate_click, downloadLP } from "./scripts";
+import { calculate_click, downloadLP, downloadMPS } from "./scripts";
 import text from "./lang";
 
 export default function Home() {
@@ -24,6 +24,7 @@ export default function Home() {
   const tr_calc_max = text(language, "maximize");
   const tr_calc_min = text(language, "minimize");
   const tr_calcButton = text(language, "buttonCalc");
+  const tr_boxExportMPS = text(language, "boxExportMPS");
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(event.target.value);
@@ -85,6 +86,10 @@ export default function Home() {
         className={"button"}
         onClickFunc={downloadLP}
       />
+      <Button
+        title={tr_boxExportMPS}
+        className={"button"}
+        onClickFunc={downloadMPS} />
       <br />
       <Output
         id="out"
