@@ -1,30 +1,31 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Home from "../src/app/page";
+import Home from '../src/app/page';
 import { customLog, customLogClear } from '../src/app/scripts';
-import { useRouter } from 'next/router';
 
-
+// Mock customLog and customLogClear
 jest.mock('../src/app/scripts', () => ({
     customLog: jest.fn(),
     customLogClear: jest.fn(),
 }));
 
-jest.mock('next/router', () => ({
+// Mock next/navigation instead of next/router
+jest.mock('next/navigation', () => ({
     useRouter: jest.fn().mockReturnValue({
-        push: jest.fn(), 
+        push: jest.fn(),
     }),
 }));
 
+// Mock GLPKAPI to avoid issues with undefined LPF_ECOND
 jest.mock('../src/solver/glpk.min.js', () => ({
     LPF_ECOND: 2,
 }));
 
 test('render home page', () => {
-    // render website
+    // Render Home component
     render(<Home />);
 
-    // check if text is in document
-    const headingElement = screen.getByText(/OR-Tool/i);  // text search in document
+    // Check if the heading text "OR-Tool" is present in the document
+    const headingElement = screen.getByText(/OR-Tool/i);  // Match text that contains "OR-Tool"
     expect(headingElement).toBeInTheDocument();
 });
