@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Box, Button, Output } from "./modules";
-import { calculate_clickMaximize, calculate_clickMinimize, downloadLP, import_click } from "./scripts"
+import { calculate_clickMaximize, calculate_clickMinimize, downloadLP, downloadMPS, import_click } from "./scripts"
 import text from "./lang"
 
 export default function Home() {
@@ -19,6 +19,7 @@ export default function Home() {
   const tr_boxVarsDesc = text(language, "boxVarsDesc");
   const tr_boxOut = text(language, "boxOut");
   const tr_boxExportLP = text(language, "boxExportLP");
+  const tr_boxExoprtMPS = text(language, "boxExportMPS");
   const tr_calc_max = text(language, "maximize");
   const tr_calc_min = text(language, "minimize");
 
@@ -71,6 +72,10 @@ export default function Home() {
         title={tr_boxExportLP}
         className={"button"}
         onClickFunc={downloadLP} />
+      <Button
+        title={tr_boxExoprtMPS}
+        className={"button"}
+        onClickFunc={downloadMPS} />
       <br></br>
       <Output
         id="out"

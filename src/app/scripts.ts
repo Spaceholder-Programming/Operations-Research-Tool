@@ -1,7 +1,7 @@
-import * as MIP from "../parser/parseMIP"
-import * as LP from "../parser/parseLP"
-import * as LPAPI from "../api/optimizeLP.js"
-
+import { LP } from "../solver/jvail/LP";
+import { Bound } from "../solver/jvail/Bound";
+import { Variable } from "../solver/jvail/Variable";
+import {Bounds, GLP_MAX, GLP_MIN, GLP_UP, GLP_LO, GLP_FX, GLP_FR, GLP_DB} from "../solver/jvail/Bounds";
 import * as GLPKAPI from "../solver/glpk.min.js"
 import { start } from "repl";
 
@@ -158,56 +158,6 @@ function calculate_click(maximize: boolean) {
     variables = (varsElement as HTMLInputElement).value;
   }
 
-  // let funcs:string[] = functions.split(/;/);
-  // let vars:string[] = variables.split(/;/);
-
-  // let direction = null;
-
-  // let namesVars:string[] = [];
-
-  // let variablesMIP:VariableMIP[];
-  // let variablesLP:VariableLP[];
-
-  // // console.log(vars);
-
-  // for (const decider of vars) {
-
-  //   // match comments
-  //   let regexMatch:RegExpMatchArray|null = decider.match(/#.*/);
-  //   if (regexMatch != null)
-  //     continue;
-
-  //   regexMatch = decider.match(/var/);
-  //   if (regexMatch != null)
-  //     namesVars.push(regexMatch[1]);
-
-
-
-  //   console.log(regexMatch);
-  // }
-
-
-  // for (const decider of funcs) {
-  //   let dir = decider.match(/(min|max) .*/);
-  //   if (direction != null && dir != null) {
-  //     document.getElementById('out').innerHTML = "ERROR: Multiple Functions!";
-  //     return;
-  //   }
-  //   if (direction == null && dir != null) {
-  //     direction = dir[1];
-  //     let test = parseFunction(decider);
-  //     console.log(test?.name);
-  //     variablesLP.
-  //     continue;
-  //   }
-
-  //   console.log(direction);
-
-  //   document.getElementById('out').innerHTML = direction;
-
-  //   console.log(parseFunction(decider));
-
-
   // catch error: empty input field(s)
   if (!isInputFilled(objective, subject, bounds, variables)) return;
 
@@ -329,6 +279,14 @@ export function downloadLP() {
   customLog("downloadFetchInput");
   customLog("");
 
+  let exportString:string|undefined = getInputsForLPAsString();
+
+  if (exportString === undefined) return;
+
+  downloadProblemDownload(exportString);
+}
+
+function getInputsForLP() {
   let objective: string | undefined;
   const objectiveElement = document.getElementById('objective');
   if (objectiveElement !== null) {
@@ -356,45 +314,360 @@ export function downloadLP() {
   // catch error: empty input field(s)
   if (!isInputFilled(objective, subject, bounds, variables)) return;
 
-  const exportString: string = downloadLPFormatting(objective, subject, bounds);
-
-  downloadProblemDownload(exportString);
+  return {objective, subject, bounds};
 }
 
-// Irgend ein Interface
-// document.getElementById('out').innerHTML = funcs;
+function getInputsForLPAsString():string {
 
-// output.innerHTML = functions.innerHTML;
+  let inputs = getInputsForLP();
+  let obj  = inputs?.objective;
+  let sub  = inputs?.subject;
+  let bnds = inputs?.bounds;
 
-// createProblemMIP();
+  const exportString: string = downloadLPFormatting(obj, sub, bnds);
 
-// LPAPI.default();
+  return exportString;
+}
 
 
 export function import_click() {
   console.log("importing");
 }
 
+export function convertLPToMPS(lp: LP): string {
+  let mpsString = '';
 
-// export function export_click() {
-//   console.log("Exporting...");
+  // NAME section
+  mpsString += `NAME          ${lp.name}\n`;
 
-// }
+  // ROWS section
+  mpsString += 'ROWS\n';
+  mpsString += ` N  ${lp.objective.name}\n`; // Objective row
+  lp.subjectTo.forEach(constraint => {
+      if (constraint.bounds.type === GLP_UP) { // <=
+          mpsString += ` L  ${constraint.name}\n`;
+      } else if (constraint.bounds.type === GLP_LO) { // >=
+          mpsString += ` G  ${constraint.name}\n`;
+      } else if (constraint.bounds.type === GLP_FX) { // =
+          mpsString += ` E  ${constraint.name}\n`;
+      }
+  });
 
-// function parseFunction(toParse: string) {
-//   var regex = toParse.match(/([a-zA-Z][a-zA-Z0-9]*):/);
-//   if (regex == null)
-//     return;
-//   var name = regex[1];
+  // COLUMNS section
+  mpsString += 'COLUMNS\n';
+  const variableMap: { [key: string]: { row: string; coef: number }[] } = {};
+  lp.objective.vars.forEach(varObj => {
+      if (!variableMap[varObj.name]) {
+          variableMap[varObj.name] = [];
+      }
+      variableMap[varObj.name].push({ row: lp.objective.name, coef: varObj.coef });
+  });
+  lp.subjectTo.forEach(constraint => {
+      constraint.vars.forEach(varObj => {
+          if (!variableMap[varObj.name]) {
+              variableMap[varObj.name] = [];
+          }
+          variableMap[varObj.name].push({ row: constraint.name, coef: varObj.coef });
+      });
+  });
 
-//   regex = toParse.match(/(?:([0-9]*) *\* *([a-zA-Z][a-zA-Z0-9]*))/g);
+  for (const [variable, rows] of Object.entries(variableMap)) {
+      rows.forEach(entry => {
+          mpsString += `    ${variable}  ${entry.row}  ${entry.coef}\n`;
+      });
+  }
 
-//   let coefs:number[] = [];
-//   let vars:string[] = [];
+  // RHS section
+  mpsString += 'RHS\n';
+  lp.subjectTo.forEach(constraint => {
+      if (constraint.bounds.type === GLP_UP ) { // <= or =
+          mpsString += `    RHS1  ${constraint.name}  ${constraint.bounds.ub}\n`;
+      } else if (constraint.bounds.type === GLP_LO || constraint.bounds.type === GLP_FX) { // >=
+          mpsString += `    RHS1  ${constraint.name}  ${constraint.bounds.lb}\n`;
+      }
+  });
 
-//   for (const rg of regex) {
-//     coefs.push(+rg.match(/([0-9]+)/g));
-//     vars.push(rg.match(/([a-zA-Z][a-zA-Z0-9]*)/g)[0]);
-//   }
-//   return {name, coefs, vars};
-// }
+  // BOUNDS section
+  if (lp.bounds && lp.bounds.length > 0) {
+      mpsString += 'BOUNDS\n';
+      lp.bounds.forEach(bound => {
+          if (bound.lb !== -Infinity) {
+              mpsString += ` LO BND1  ${bound.name}  ${bound.lb}\n`;
+          }
+          if (bound.ub !== Infinity) {
+              mpsString += ` UP BND1  ${bound.name}  ${bound.ub}\n`;
+          }
+      });
+  }
+
+  // BINARY section
+  if (lp.binaries && lp.binaries.length > 0) {
+      mpsString += 'BINARY\n';
+      lp.binaries.forEach(bin => {
+          mpsString += `    ${bin}\n`;
+      });
+  }
+
+  // GENERAL section
+  if (lp.generals && lp.generals.length > 0) {
+      mpsString += 'GENERAL\n';
+      lp.generals.forEach(gen => {
+          mpsString += `    ${gen}\n`;
+      });
+  }
+
+  // ENDATA section
+  mpsString += 'ENDATA\n';
+
+  return mpsString;
+}
+
+// read LP format from string
+function parseLP(lpString: string): LP {
+  const lines = lpString.split("\n").map((line) => line.trim()).filter((line) => line.length > 0);
+  let mode: string = '';
+  let lp: LP = {
+      name: '',
+      objective: {
+          direction: GLP_MAX, // 1 for maximize, -1 for minimize
+          name: '',
+          vars: []
+      },
+      subjectTo: [],
+      bounds: [],
+      binaries: [],
+      generals: []
+  };
+
+  let objectiveExpression = '';
+  let constraintExpression = ''; 
+  let currentConstraintName = ''; 
+
+  for (let line of lines) {
+
+      // handle each block differently
+      // set mode for each to determine parsing path
+      if (line.startsWith("Maximize")) {
+          lp.objective.direction = GLP_MAX;
+          mode = 'objective';
+          continue;
+      } else if (line.startsWith("Minimize")) {
+          lp.objective.direction = GLP_MIN;
+          mode = 'objective';
+          continue;
+      } else if (line.startsWith("Subject To")) {
+          // Constraint section
+          if (objectiveExpression.length > 0) {
+              lp.objective.vars = parseLPExpression(objectiveExpression.trim());
+              objectiveExpression = '';
+          }
+          mode = 'subjectTo';
+          continue;
+      } else if (line.startsWith("Bounds")) {
+          // Bound section
+          if (constraintExpression.length > 0 && currentConstraintName.length > 0) {
+              const { vars, bound } = parseLPConstraint(constraintExpression.trim());
+              lp.subjectTo.push({
+                  name: currentConstraintName,
+                  vars: vars,
+                  bounds: bound
+              });
+              constraintExpression = '';
+              currentConstraintName = '';
+          }
+          mode = 'bounds';
+          continue;
+      } else if (line.startsWith("Binary")) {
+          mode = 'binaries';
+          continue;
+      } else if (line.startsWith("General")) {
+          mode = 'generals';
+          continue;
+      } else if (line.startsWith("End")) {
+          mode = 'end';
+          continue;
+      }
+
+      // Parse based on current mode
+      if (mode === 'objective') {
+          const splitLine = line.split(":");
+          if (splitLine.length === 2) {
+              lp.objective.name = splitLine[0].trim(); // if name in first line
+              objectiveExpression += splitLine[1].trim() + ' ';
+          } else {
+              objectiveExpression += line.trim() + ' '; // multiline expansion of objective
+          }
+
+      } else if (mode === 'subjectTo') {
+          const splitLine = line.split(":");
+          if (splitLine.length === 2) {
+              if (constraintExpression.length > 0 && currentConstraintName.length > 0) {
+                  // new Constraint -> add previous to the subjects
+                  const { vars, bound } = parseLPConstraint(constraintExpression.trim());
+                  lp.subjectTo.push({
+                      name: currentConstraintName,
+                      vars: vars,
+                      bounds: bound
+                  });
+              }
+              // start collecting the new constraint
+              currentConstraintName = splitLine[0].trim();
+              constraintExpression = splitLine[1].trim() + ' ';
+          } else {
+              // continue collecting the expression if it's multi-line
+              constraintExpression += line.trim() + ' ';
+          }
+      } else if (mode === 'bounds') {
+          const bound = parseLPBound(line.trim());
+          if (bound && lp.bounds) {
+              lp.bounds.push(bound);
+          }
+      } else if (mode === 'binaries') {
+          lp.binaries?.push(line.trim());
+      } else if (mode === 'generals') {
+          lp.generals?.push(line.trim());
+      }
+  }
+
+  // if no "subject to" previously, do it here
+  if (objectiveExpression.length > 0) {
+      lp.objective.vars = parseLPExpression(objectiveExpression.trim());
+  }
+
+  // same for "bounds" and "end"
+  if (constraintExpression.length > 0 && currentConstraintName.length > 0) {
+      const { vars, bound } = parseLPConstraint(constraintExpression.trim());
+      lp.subjectTo.push({
+          name: currentConstraintName,
+          vars: vars,
+          bounds: bound
+      });
+  }
+
+  return lp;
+}
+
+// Helper for expressions
+function parseLPExpression(expr: string): Variable[] {
+  const regex = /([+-]?\s*\d*\.?\d*)\s*([a-zA-Z_][a-zA-Z_0-9]*)/g;
+  let match;
+  let vars: Variable[] = [];
+
+  // loop over all variables in expresion
+  while ((match = regex.exec(expr)) !== null) {
+      let temp_coef = match[1].replace(/\s+/g, '').trim() || '1';
+      temp_coef = temp_coef === "-" || temp_coef === '+' ? `${temp_coef}1` : temp_coef;
+      const coef = parseFloat(temp_coef);
+      const name = match[2];
+      vars.push({ name: name, coef: coef });
+  }
+
+  return vars;
+}
+
+// Helper for Constraint section
+function parseLPConstraint(constraint: string): { vars: Variable[], bound: Bounds } {
+  // Valid operators in Constraints
+  const operators = ["<=", ">=", "="];
+  let operator = operators.find(op => constraint.includes(op));
+  if (!operator) {
+      throw new Error("Invalid constraint format");
+  }
+
+  const [expr, boundStr] = constraint.split(operator);
+  const vars: Variable[] = parseLPExpression(expr.trim());
+  const boundValue = parseFloat(boundStr.trim());
+
+  // determine bound type
+  let boundType = GLP_UP;
+  if (operator === "<=") {
+      boundType = GLP_UP;
+  } else if (operator === ">=") {
+      boundType = GLP_LO;
+  } else if (operator === "=") {
+      boundType = GLP_FX;
+  }
+  let lb = boundType === GLP_FX ? boundValue : boundType === GLP_LO ? boundValue : -Infinity;
+  let ub = boundType === GLP_UP ? boundValue : Infinity;
+
+  const bound: Bounds = {
+      type: boundType,
+      lb: lb,
+      ub: ub
+  } as Bounds;
+
+  return { vars, bound };
+}
+
+// Helper for Bound section
+function parseLPBound(boundStr: string): Bound | null {
+  // Regex to handle various bound formats
+  const regex = /^([-]?\d*\.?\d*)?\s*(<=|>=|=)?\s*([a-zA-Z_][a-zA-Z_0-9]*)\s*(<=|>=|=)?\s*([-]?\d*\.?\d*)?$/;
+  const match = regex.exec(boundStr.trim());
+
+  if (match) {
+      const [, lbStr, leftOperator, varName, rightOperator, ubStr] = match;
+      let lb = lbStr ? parseFloat(lbStr) : undefined;
+      let ub = ubStr ? parseFloat(ubStr) : undefined;
+      let type: number;
+
+      // Handle free "edgecase"
+      if (boundStr.toLowerCase().includes('free')) {
+          return {
+              type: GLP_FR,
+              name: varName,
+              lb: -Infinity,
+              ub: Infinity
+          } as Bound;
+      }
+
+      // Determine bound type
+      if (leftOperator && rightOperator) {
+          if (leftOperator === '<=' && rightOperator === '<=') {
+              type = GLP_DB; // Double bound
+          } else if (leftOperator === '>=' && rightOperator === '>=') {
+              type = GLP_DB; // Double bound (reverse order)
+              [lb, ub] = [ub, lb]; // Swap lb and ub
+          } else {
+              return null; // Invalid combination
+          }
+      // detect one-sided bounds
+      } else if (leftOperator === '<=') {
+          type = GLP_UP;
+          ub = lb;
+          lb = undefined;
+      } else if (rightOperator === '<=') {
+          type = GLP_UP;
+      } else if (leftOperator === '>=') {
+          type = GLP_LO;
+      } else if (rightOperator === '>=') {
+          type = GLP_LO;
+          lb = ub;
+          ub = undefined;
+      } else if (leftOperator === '=' || rightOperator === '=') {
+          type = GLP_FX;
+          if (leftOperator === '=') ub = lb;
+          else lb = ub;
+      } else {
+          type = GLP_FR; // No bounds specified, assume free
+      }
+
+      return {
+          type,
+          name: varName,
+          lb: lb !== undefined ? lb : -Infinity,
+          ub: ub !== undefined ? ub : Infinity
+      } as Bound;
+  }
+  return null;
+}
+
+export function downloadMPS() {
+  let inputs = getInputsForLPAsString();
+  let lp = parseLP(inputs);
+  let mps = convertLPToMPS(lp);
+
+  downloadProblemDownload(mps);
+
+  console.log(mps);
+}
