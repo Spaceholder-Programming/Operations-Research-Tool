@@ -1,13 +1,19 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Box, Button, Output } from "./modules";
 import { calculate_click, downloadLP, downloadMPS } from "./scripts";
 import text from "./lang";
+import { spec } from 'node:test/reporters';
+import { useRouter } from 'next/navigation';
+import { LanguageContext } from './context/LanguageContext';
 
 export default function Home() {
-  const [language, setLanguage] = useState('eng');
+  const { language, setLanguage } = useContext(LanguageContext);
   const [maxminOption, setMaxminOption] = useState('maximize');
+  const [model, selectedModel] = useState('spec');
+  const router = useRouter();
+  
 
   const tr_hTitle = text(language, 'header_title');
   const tr_hSubtitle = text(language, 'header_subtitle');
@@ -25,9 +31,19 @@ export default function Home() {
   const tr_calc_min = text(language, "minimize");
   const tr_calcButton = text(language, "buttonCalc");
   const tr_boxExportMPS = text(language, "boxExportMPS");
+  const tr_GenProblems = text(language, 'GenProblem');
+  const tr_SpecProblems = text(language, 'SpecProblem');
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(event.target.value);
+  };
+
+  const changeModel = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    selectedModel(event.target.value);
+
+    if (event.target.value === 'gen') {
+      router.push('./glp');
+    }
   };
 
   const handleMaxMinChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -48,6 +64,10 @@ export default function Home() {
             <select id="language_current" value={language} onChange={handleLanguageChange} className="dropdown-custom">
               <option value="ger">Deutsch</option>
               <option value="eng">English</option>
+            </select>
+            <select id="language_current" value={model} onChange={changeModel} className="dropdown-custom">
+            <option value="gen">{tr_GenProblems}</option>
+            <option value="spec">{tr_SpecProblems}</option>
             </select>
           </main>
         </div>
